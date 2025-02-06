@@ -91,10 +91,10 @@ public class UserController {
     }
 
     private static boolean isValidEmail(String email) {
-        Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$",
+        Pattern emailPattern = Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$",
                 Pattern.CASE_INSENSITIVE);
 
-        Matcher matcher = EMAIL_PATTERN.matcher(email);
+        Matcher matcher = emailPattern.matcher(email);
         return matcher.matches();
     }
 
