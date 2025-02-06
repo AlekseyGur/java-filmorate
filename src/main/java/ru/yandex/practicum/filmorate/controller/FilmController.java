@@ -81,7 +81,8 @@ public class FilmController {
         if (film.getDescription() != null && film.getDescription().strip().length() > Film.MAX_DESCRIPTION_LEN) {
             throw new ValidationException("Максимальная длина описания — " + Film.MAX_DESCRIPTION_LEN + " символов");
         }
-        if (film.getReleaseDate() != null && LocalDate.parse(film.getReleaseDate()).isBefore(LocalDate.parse(Film.MIN_RELEASE_DATE))) {
+        if (film.getReleaseDate() != null
+                && LocalDate.parse(film.getReleaseDate()).isBefore(LocalDate.parse(Film.MIN_RELEASE_DATE))) {
             throw new ValidationException("Дата релиза — не раньше " + Film.MIN_RELEASE_DATE);
         }
         if (film.getDuration() != null && film.getDuration() <= 0) {

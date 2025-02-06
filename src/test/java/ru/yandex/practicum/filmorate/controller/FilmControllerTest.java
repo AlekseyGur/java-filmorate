@@ -44,7 +44,7 @@ public class FilmControllerTest {
         film.setReleaseDate(LocalDate.parse("1995-04-21").toString());
 
         filmController.create(film);
-        
+
         Film film2 = new Film();
         film2.setName("New name");
         film2.setId(1L);
@@ -125,7 +125,8 @@ public class FilmControllerTest {
         film2.setDuration(-1);
         film2.setReleaseDate(Film.MIN_RELEASE_DATE);
 
-        assertThrows(ValidationException.class, () -> filmController.create(film2), "Продолжительность должна быть положительной!");
+        assertThrows(ValidationException.class, () -> filmController.create(film2),
+                "Продолжительность должна быть положительной!");
 
         Film film3 = new Film();
         film3.setName("Any name");
