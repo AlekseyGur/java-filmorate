@@ -10,6 +10,7 @@ import java.util.Collection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -57,6 +58,18 @@ public class UserControllerTest {
         User firstUser = users.iterator().next();
         assertTrue(users.size() == 1, "Пользователь должен добавиться");
         assertTrue(firstUser.getLogin() == "newlogin", "Пользователь должен изменить login");
+    }
+
+    @Test
+    void testUpdateErrorUnknownUser() {
+        User user = new User();
+        user.setId(5L);
+        user.setLogin("login");
+        user.setName("name");
+        user.setEmail("test@test.test");
+        user.setBirthday(LocalDate.now().toString());
+
+        assertThrows(NotFoundException.class, () -> userController.update(user), "Нельзя изменить несуществующего пользователя");
     }
 
     @Test

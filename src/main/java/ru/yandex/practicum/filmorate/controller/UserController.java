@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -53,9 +54,8 @@ public class UserController {
                 return oldUser;
             }
         }
-        // throw new NotFoundException("Пользователь с id = " + newUser.getId() + " не
-        // найден");
-        return newUser;
+        throw new NotFoundException("Пользователь с id = " + newUser.getId() + " не найден");
+        // return newUser;
     }
 
     // вспомогательный метод для генерации идентификатора нового поста
