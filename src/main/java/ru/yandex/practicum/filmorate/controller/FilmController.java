@@ -1,10 +1,13 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import java.time.LocalDate;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -12,26 +15,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.extern.slf4j.Slf4j;
+import jakarta.validation.Valid;
 import ru.yandex.practicum.filmorate.exception.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
-@Slf4j
 @RestController
 @RequestMapping("/films")
+@Service
+@Validated
 public class FilmController {
 
     private final Map<Long, Film> films = new HashMap<>();
 
     @GetMapping
-    public Collection<Film> findAll() {
-        return films.values();
+    public List<Film> findAll() {
+		return new ArrayList<Film>(films.values());
     }
 
     @PostMapping
-    public Film create(@RequestBody Film film) {
+    public Film create(@Valid @RequestBody Film film) {
         // проверяем выполнение необходимых условий
         validate(film);
         // формируем дополнительные данные
@@ -42,7 +46,7 @@ public class FilmController {
     }
 
     @PutMapping
-    public Film update(@RequestBody Film newFilm) {
+    public Film update(@Valid @RequestBody Film newFilm) {
         // проверяем необходимые условия
         if (newFilm.getId() == null) {
             throw new ConditionsNotMetException("Id должен быть указан");
@@ -73,7 +77,7 @@ public class FilmController {
         return ++currentMaxId;
     }
 
-    private void validate(Film film) {
+    private void validate(@Valid Film film) {
         // проверяем выполнение необходимых условий
         if (film.getName() == null || film.getName().isBlank()) {
             throw new ValidationException("Название не может быть пустым");

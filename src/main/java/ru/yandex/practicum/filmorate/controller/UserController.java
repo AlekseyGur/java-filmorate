@@ -1,14 +1,19 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,17 +21,19 @@ import java.util.regex.Pattern;
 @Slf4j
 @RestController
 @RequestMapping("/users")
+@Service
+@Validated
 public class UserController {
 
     private final Map<Long, User> users = new HashMap<>();
 
     @GetMapping
-    public Collection<User> findAll() {
-        return users.values();
+    public List<User> findAll() {
+		return new ArrayList<User>(users.values());
     }
 
     @PostMapping
-    public User create(@RequestBody User user) {
+    public User create(@Valid @RequestBody User user) {
         // проверяем выполнение необходимых условий
         validate(user);
         // формируем дополнительные данные
@@ -37,7 +44,7 @@ public class UserController {
     }
 
     @PutMapping
-    public User update(@RequestBody User newUser) {
+    public User update(@Valid @RequestBody User newUser) {
         // проверяем необходимые условия
         validate(newUser);
         if (users.containsKey(newUser.getId())) {
@@ -68,7 +75,7 @@ public class UserController {
         return ++currentMaxId;
     }
 
-    private void validate(User user) {
+    private void validate(@Valid User user) {
         if (user.getEmail() == null || user.getEmail().isBlank() || !user.getEmail().contains("@") || !isValidEmail(user.getEmail())) {
             throw new ValidationException("Электронная почта не может быть пустой и должна содержать символ @");
         }
