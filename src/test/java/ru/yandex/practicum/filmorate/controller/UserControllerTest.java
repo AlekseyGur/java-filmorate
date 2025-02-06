@@ -37,6 +37,21 @@ public class UserControllerTest {
     }
 
     @Test
+    void testCreateNoNameSetLoginToName() {
+        User user = new User();
+        user.setLogin("login");
+        // user.setName("name");
+        user.setEmail("test@test.test");
+        user.setBirthday(LocalDate.parse("1995-04-21").toString());
+
+        userController.create(user);
+
+        Collection<User> users = userController.findAll();
+        User firstUser = users.iterator().next();
+        assertTrue(firstUser.getName().equals("login"), "Пользователь должен добавиться");
+    }
+
+    @Test
     void testUpdateNormal() {
         User user = new User();
         user.setLogin("login");

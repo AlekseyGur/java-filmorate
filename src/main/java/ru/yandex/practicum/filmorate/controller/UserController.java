@@ -77,13 +77,11 @@ public class UserController {
             throw new ValidationException("Логин не может быть пустым и содержать пробелы");
         }
 
-        // Закомментировано, потому что не проходит тестов из Postman!
-        //
-        // if (user.getName() != null || user.getName().isBlank()) {
-        //     throw new ValidationException(
-        //             "Имя для отображения может быть пустым — в таком случае будет использован логин");
-        //     user.setName(user.getLogin());
-        // }
+        if (user.getName() == null || user.getName().isBlank()) {
+            // throw new ValidationException(
+            //         "Имя для отображения может быть пустым — в таком случае будет использован логин");
+            user.setName(user.getLogin());
+        }
 
         if (user.getBirthday() != null && LocalDate.parse(user.getBirthday()).isAfter(LocalDate.now())) {
             throw new ValidationException("Дата рождения не может быть в будущем");
