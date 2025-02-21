@@ -1,5 +1,8 @@
 package ru.yandex.practicum.filmorate.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -17,4 +20,18 @@ public class User {
     private String login;
     private String name;
     private String birthday;
+
+    private Set<Long> friends = new HashSet<>();
+
+    public void addFriends(Long friendId) {
+        friends.add(friendId);
+    }
+
+    public void removeFriends(Long friendId) {
+        friends.remove(friendId);
+    }
+
+    public Set<Long> getFriends() {
+        return friends;
+    }
 }
