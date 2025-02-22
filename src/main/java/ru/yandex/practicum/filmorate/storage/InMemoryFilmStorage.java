@@ -11,12 +11,13 @@ import java.util.Set;
 import org.springframework.stereotype.Component;
 
 import ru.yandex.practicum.filmorate.exception.ConditionsNotMetException;
+import ru.yandex.practicum.filmorate.exception.ConstraintViolationException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
-    InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
+    private InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
     private final Map<Long, Film> films = new HashMap<>();
     private final Map<Long, Set<Long>> filmLikes = new HashMap<>();
     private Long nextId = 1L;
@@ -44,7 +45,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         if (films.containsKey(newFilm.getId())) {
             Film oldFilm = films.get(newFilm.getId());
             if (newFilm.getDescription() == null || newFilm.getDescription().isBlank()) {
-                throw new ConditionsNotMetException("Описание не может быть пустым");
+                throw new ConstraintViolationException("Описание не может быть пустым");
             }
             // если фильм найден и все условия соблюдены, обновляем её содержимое
             oldFilm.setName(newFilm.getName());
