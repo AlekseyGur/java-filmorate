@@ -11,14 +11,13 @@ import lombok.extern.slf4j.Slf4j;
 @RestControllerAdvice
 public class ErrorHandler {
 
-    
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse constraintViolationException(final ConstraintViolationException e) {
         log.error("Ошибка сервера " + e.getMessage());
         return new ErrorResponse(e.getMessage());
     }
-    
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse methodArgumentNotValidException(final MethodArgumentNotValidException e) {
