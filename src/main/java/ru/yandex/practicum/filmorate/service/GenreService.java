@@ -10,25 +10,25 @@ import ru.yandex.practicum.filmorate.storage.GenreStorage;
 @Service
 public class GenreService {
 
-    private final GenreStorage GenreStorage;
+    private final GenreStorage genreStorage;
 
-    public GenreService(GenreStorage GenreStorage) {
-        this.GenreStorage = GenreStorage;
+    public GenreService(GenreStorage genreStorage) {
+        this.genreStorage = genreStorage;
     }
-    
+
     public Genre get(Long id) {
-        return GenreStorage.getGenre(id);
+        return genreStorage.getGenre(id);
     }
-    
-    public Genre create(Genre Genre) {
-        return GenreStorage.addGenre(Genre);
+
+    public Genre create(Genre genre) {
+        return genreStorage.addGenre(genre);
     }
 
     public void remove(Long id) {
-        GenreStorage.removeGenre(id);
+        genreStorage.removeGenre(id);
     }
 
     public List<Genre> findAll() {
-        return GenreStorage.findAll();
+        return genreStorage.findAll();
     }
 }
