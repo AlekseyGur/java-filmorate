@@ -15,13 +15,13 @@ public class MpaService {
     public MpaService(MpaStorage mpaStorage) {
         this.mpaStorage = mpaStorage;
     }
-    
+
     public Mpa get(Long id) {
         return mpaStorage.getMpa(id);
     }
-    
-    public Mpa create(Mpa Mpa) {
-        return mpaStorage.addMpa(Mpa);
+
+    public Mpa create(Mpa mpa) {
+        return mpaStorage.addMpa(mpa);
     }
 
     public void remove(Long id) {
