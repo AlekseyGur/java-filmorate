@@ -48,6 +48,12 @@ public class FilmController {
         return filmService.getPopularFilms(count);
     }
 
+    @GetMapping("/{filmId}")
+    @ResponseStatus(HttpStatus.OK)
+    public Film getFilm(@PathVariable Long filmId) {
+        return filmService.getFilm(filmId);
+    }
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<Film> findAll() {

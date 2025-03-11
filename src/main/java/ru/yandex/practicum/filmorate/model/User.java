@@ -23,6 +23,10 @@ public class User {
 
     private Set<Long> friends = new HashSet<>();
 
+    public void setFriends(Set<Long> friends) {
+        this.friends = friends;
+    }
+
     public void addFriends(Long friendId) {
         friends.add(friendId);
     }

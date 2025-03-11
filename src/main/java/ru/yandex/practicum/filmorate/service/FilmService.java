@@ -16,16 +16,12 @@ public class FilmService {
         this.filmStorage = filmStorage;
     }
 
-    public void addLike(Long filmId, Long userId) {
-        filmStorage.addLike(filmId, userId);
-    }
-
-    public void removeLike(Long filmId, Long userId) {
-        filmStorage.removeLike(filmId, userId);
-    }
-
     public List<Film> getPopularFilms(int count) {
         return filmStorage.getPopularFilms(count);
+    }
+
+    public Film getFilm(Long filmId) {
+        return filmStorage.getFilm(filmId);
     }
 
     public List<Film> findAll() {
@@ -38,5 +34,13 @@ public class FilmService {
 
     public Film update(Film film) {
         return filmStorage.updateFilm(film);
+    }
+
+    public void addLike(Long filmId, Long userId) {
+        filmStorage.addLike(filmId, userId);
+    }
+
+    public void removeLike(Long filmId, Long userId) {
+        filmStorage.removeLike(filmId, userId);
     }
 }

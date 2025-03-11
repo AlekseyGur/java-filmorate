@@ -7,30 +7,36 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.time.LocalDate;
 import java.util.Collection;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
+import ru.yandex.practicum.filmorate.dal.mapper.UserRowMapper;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
+@SpringBootTest
+@Transactional
 public class UserControllerTest {
-    UserController userController;
-    UserService userService;
-    UserStorage userStorage;
+    @Autowired
+    private JdbcTemplate jdbc;
 
-    @BeforeEach
-    void setUp() {
-        userStorage = new InMemoryUserStorage();
-        userService = new UserService(userStorage);
-        userController = new UserController(userService);
-    }
+    @Autowired
+    private UserController userController;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private UserStorage userStorage;
+    @Autowired
+    private UserRowMapper userMapper;
 
     @Test
-    void testCreateNormal() {
+    void testCreateUserNormal() {
         User user = new User();
         user.setLogin("login");
         user.setName("name");
@@ -66,12 +72,12 @@ public class UserControllerTest {
         user.setEmail("test@test.test");
         user.setBirthday(LocalDate.now().toString());
 
-        userController.addUser(user);
+        User userCreated = userController.addUser(user);
 
         User user2 = new User();
         user2.setLogin("newlogin");
         user2.setName("name");
-        user2.setId(1L);
+        user2.setId(userCreated.getId());
         user2.setEmail("test@test.test");
         user2.setBirthday(LocalDate.now().minusYears(28).toString());
         userService.updateUser(user2);

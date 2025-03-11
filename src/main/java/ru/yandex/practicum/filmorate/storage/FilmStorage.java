@@ -20,12 +20,12 @@ public interface FilmStorage {
     // Получает список всех фильмов
     List<Film> findAll();
 
+    // Получает список популярных фильмов
+    List<Film> getPopularFilms(Integer count);
+
     // Пользователь ставит лайк фильму
     void addLike(Long filmId, Long userId);
 
     // Пользователь удаляет лайк у фильма
     void removeLike(Long filmId, Long userId);
-
-    // Получает список популярных фильмов
-    List<Film> getPopularFilms(Integer count);
 }

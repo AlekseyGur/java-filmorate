@@ -1,8 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import java.util.List;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -15,9 +13,6 @@ import lombok.EqualsAndHashCode;
 public class Film {
     public static final int MAX_DESCRIPTION_LEN = 200;
     public static final String MIN_RELEASE_DATE = "1895-12-28";
-
-    // Набор уникальных лайков от пользователей
-    private Set<Long> likes = new HashSet<>();
 
     private Long id;
 
@@ -33,18 +28,19 @@ public class Film {
     @Min(1)
     private Integer duration;
 
-    // Метод для добавления лайка
-    public void addLike(Long userId) {
-        likes.add(userId);
-    }
+    private Mpa mpa;
+    private List<Genre> genres;
+    private List<Long> likes; // = new HashSet<>();
 
-    // Метод для удаления лайка
-    public void removeLike(Long userId) {
-        likes.remove(userId);
-    }
+    // public void addLike(Long userId) {
+    // likes.add(userId);
+    // }
 
-    // Метод для получения количества лайков
-    public int getLikesCount() {
-        return likes.size();
-    }
+    // public void removeLike(Long userId) {
+    // likes.remove(userId);
+    // }
+
+    // public int getLikesCount() {
+    // return likes.size();
+    // }
 }
