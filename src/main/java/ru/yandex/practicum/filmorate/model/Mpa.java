@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(of = { "name" })
+@EqualsAndHashCode(of = { "id" })
 public class Mpa implements Serializable {
     private Long id;
     private String name;

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.GenreStorage;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import org.springframework.jdbc.core.RowMapper;
 
+@Slf4j
 @Component
 @Repository
 public class GenreDbStorage extends BaseRepository<Genre> implements GenreStorage {
@@ -64,20 +66,17 @@ public class GenreDbStorage extends BaseRepository<Genre> implements GenreStorag
         update(GENRE_FILM_DELETE_ALL, filmId);
     }
 
-    public List<Genre> updateFilmGenres(Long filmId, List<Genre> genresObjs) {
-        if (genresObjs != null) {
-            update(GENRE_FILM_DELETE_ALL, filmId);
-            for (Genre g : genresObjs) {
-                insert(GENRE_FILM_ADD, filmId, g.getId());
-            }
-        }
+    public List<Genre> updateFilmGenres(Long filmId, List<Genre> genres) {
+        setFilmGenre(filmId, genres);
         return findAllByFilmId(filmId);
     }
 
-    public void setFilmGenre(Long filmId, List<Genre> genresIds) {
-        for (Genre genre : genresIds) {
-            insert(GENRE_FILM_ADD, filmId, genre.getId());
+    public void setFilmGenre(Long filmId, List<Genre> genres) {
+        deleteFilmGenreAll(filmId);
+        if (genres != null && !genres.isEmpty()) {
+            for (Genre genre : genres) {
+                insert(GENRE_FILM_ADD, filmId, genre.getId());
+            }
         }
     }
-
 }

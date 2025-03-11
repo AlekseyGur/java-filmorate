@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.ConditionsNotMetException;
@@ -39,7 +40,7 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
     @Override
     public Film addFilm(Film film) {
         Long mpa = null;
-        List<Genre> genres = List.of();
+        ArrayList<Genre> genres = new ArrayList<>();
 
         if (film.getMpa() != null) {
             mpa = film.getMpa().getId();
@@ -79,7 +80,7 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
     }
 
     public Film updateFilm(Film newFilm) {
-        List<Genre> genres = List.of();
+        ArrayList<Genre> genres = new ArrayList<>();
         if (newFilm.getId() == null) {
             throw new ConditionsNotMetException("Id должен быть указан");
         }
@@ -150,8 +151,9 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
     }
 
     private Film getFilmImpl(Long id) {
-        return findOne(
-                FILM_GET_BY_ID,
-                id).get();
+        if (!unsafeCheckTableContainsId("films", id)) {
+            throw new NotFoundException("Фильм с id = " + id + " не найден");
+        }
+        return findOne(FILM_GET_BY_ID, id).get();
     }
 }
