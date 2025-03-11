@@ -13,22 +13,22 @@ import java.util.List;
 @RequestMapping("/mpa")
 public class MpaController {
 
-    private final MpaService MpaService;
+    private final MpaService mpaService;
 
     @Autowired
     public MpaController(MpaService MpaService) {
-        this.MpaService = MpaService;
+        this.mpaService = MpaService;
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<Mpa> findAll() {
-        return MpaService.findAll();
+        return mpaService.findAll();
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Mpa getMpa(@PathVariable Long id) {
-        return MpaService.get(id);
+        return mpaService.get(id);
     }
 }
