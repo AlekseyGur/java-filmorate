@@ -39,7 +39,7 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
     @Override
     public Film addFilm(Film film) {
         Long mpa = null;
-        List<Genre> genres = null;
+        List<Genre> genres = List.of();
 
         if (film.getMpa() != null) {
             mpa = film.getMpa().getId();
@@ -49,10 +49,12 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
         }
 
         if (film.getGenres() != null) {
-            genres = film.getGenres();
-            for (Genre g : genres) {
+            for (Genre g : film.getGenres()) {
                 if (!unsafeCheckTableContainsId("genre", g.getId())) {
                     throw new NotFoundException("Жанр с id = " + g.getId() + " не найден");
+                }
+                if (!genres.contains(g)) {
+                    genres.add(g);
                 }
             }
         }
@@ -77,6 +79,7 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
     }
 
     public Film updateFilm(Film newFilm) {
+        List<Genre> genres = List.of();
         if (newFilm.getId() == null) {
             throw new ConditionsNotMetException("Id должен быть указан");
         }
@@ -96,6 +99,9 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
                 if (!unsafeCheckTableContainsId("genre", g.getId())) {
                     throw new NotFoundException("Жанр с id = " + g.getId() + " не найден");
                 }
+                if (!genres.contains(g)) {
+                    genres.add(g);
+                }
             }
         }
 
@@ -107,7 +113,7 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
                 newFilm.getMpa().getId(),
                 newFilm.getId());
 
-        genreDbStorage.updateFilmGenres(newFilm.getId(), newFilm.getGenres());
+        genreDbStorage.updateFilmGenres(newFilm.getId(), genres);
         Film savedFilm = getFilmImpl(newFilm.getId());
         return savedFilm;
     }
