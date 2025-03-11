@@ -24,14 +24,14 @@ public class MpaDbStorage extends BaseRepository<Mpa> implements MpaStorage {
     }
 
     @Override
-    public Mpa addMpa(Mpa Mpa) {
-        Long id = insert(MPA_ADD, Mpa.getName());
+    public Mpa addMpa(Mpa mpa) {
+        Long id = insert(MPA_ADD, mpa.getName());
         return findOne(MPA_GET_BY_ID, id).get();
     }
 
     @Override
-    public void removeMpa(Long MpaId) {
-        update(MPA_DELETE, MpaId);
+    public void removeMpa(Long id) {
+        update(MPA_DELETE, id);
     }
 
     @Override
