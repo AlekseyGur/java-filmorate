@@ -30,17 +30,5 @@ public class Film {
 
     private Mpa mpa;
     private List<Genre> genres;
-    private List<Long> likes; // = new HashSet<>();
-
-    // public void addLike(Long userId) {
-    // likes.add(userId);
-    // }
-
-    // public void removeLike(Long userId) {
-    // likes.remove(userId);
-    // }
-
-    // public int getLikesCount() {
-    // return likes.size();
-    // }
+    private List<Long> likes;
 }

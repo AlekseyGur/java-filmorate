@@ -7,11 +7,9 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
-import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.model.User;
 
 @Component
-@Slf4j
 public class UserRowMapper implements RowMapper<User> {
     @SuppressWarnings("null")
     @Override
