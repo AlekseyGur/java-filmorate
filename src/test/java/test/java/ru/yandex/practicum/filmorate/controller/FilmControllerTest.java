@@ -10,66 +10,27 @@ import java.util.Collection;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.yandex.practicum.filmorate.FilmorateApplication;
 import ru.yandex.practicum.filmorate.controller.FilmController;
-import ru.yandex.practicum.filmorate.controller.GenreController;
-import ru.yandex.practicum.filmorate.dal.mapper.FilmRowMapper;
-import ru.yandex.practicum.filmorate.dal.mapper.GenreRowMapper;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.service.GenreService;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.GenreStorage;
-import ru.yandex.practicum.filmorate.storage.MpaStorage;
 
 @SpringBootTest(classes = FilmorateApplication.class)
 @Transactional
 public class FilmControllerTest {
-    
-    private JdbcTemplate jdbc;
     private FilmController filmController;
-    private FilmService filmService;
-    private FilmStorage filmStorage;
-    private FilmRowMapper filmMapper;
-    private MpaStorage mpaStorage;
-    private GenreController genreController;
-    private GenreService genreService;
-    private GenreStorage genreStorage;
-    private GenreRowMapper genreMapper;
 
     @Autowired
-    public FilmControllerTest(
-            JdbcTemplate jdbc,
-            FilmController filmController,
-            FilmService filmService,
-            FilmStorage filmStorage,
-            FilmRowMapper filmMapper,
-            MpaStorage mpaStorage,
-            GenreController genreController,
-            GenreService genreService,
-            GenreStorage genreStorage,
-            GenreRowMapper genreMapper
-    ) {
-        this.jdbc = jdbc;
+    public FilmControllerTest(FilmController filmController) {
         this.filmController = filmController;
-        this.filmService = filmService;
-        this.filmStorage = filmStorage;
-        this.filmMapper = filmMapper;
-        this.mpaStorage = mpaStorage;
-        this.genreController = genreController;
-        this.genreService = genreService;
-        this.genreStorage = genreStorage;
-        this.genreMapper = genreMapper;
     }
 
     @Test
     void testCreateNormal() {
         // filmController = new FilmController();
-        
+
         Film film = new Film();
         film.setName("Any name");
         film.setDescription("Small descr");

@@ -10,32 +10,22 @@ import java.util.Collection;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.yandex.practicum.filmorate.FilmorateApplication;
 import ru.yandex.practicum.filmorate.controller.UserController;
-import ru.yandex.practicum.filmorate.dal.mapper.UserRowMapper;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 @SpringBootTest(classes = FilmorateApplication.class)
 @Transactional
 public class UserControllerTest {
     @Autowired
-    private JdbcTemplate jdbc;
-
-    @Autowired
     private UserController userController;
     @Autowired
     private UserService userService;
-    @Autowired
-    private UserStorage userStorage;
-    @Autowired
-    private UserRowMapper userMapper;
 
     @Test
     void testCreateUserNormal() {
