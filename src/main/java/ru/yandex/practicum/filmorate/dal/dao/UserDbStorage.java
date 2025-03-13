@@ -38,7 +38,7 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
                 user.getLogin(),
                 user.getName(),
                 user.getBirthday());
-        
+
         return getUserImpl(id).orElse(null);
     }
 
