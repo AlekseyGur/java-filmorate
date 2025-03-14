@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.controller;
+package test.java.ru.yandex.practicum.filmorate.controller;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -7,29 +7,30 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.time.LocalDate;
 import java.util.Collection;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
+import ru.yandex.practicum.filmorate.FilmorateApplication;
+import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 
+@SpringBootTest(classes = FilmorateApplication.class)
+@Transactional
 public class FilmControllerTest {
-    FilmController filmController;
-    FilmService filmService;
-    FilmStorage filmStorage;
+    private FilmController filmController;
 
-    @BeforeEach
-    void setUp() {
-        filmStorage = new InMemoryFilmStorage();
-        filmService = new FilmService(filmStorage);
-        filmController = new FilmController(filmService);
+    @Autowired
+    public FilmControllerTest(FilmController filmController) {
+        this.filmController = filmController;
     }
 
     @Test
     void testCreateNormal() {
+        // filmController = new FilmController();
+
         Film film = new Film();
         film.setName("Any name");
         film.setDescription("Small descr");
@@ -50,11 +51,11 @@ public class FilmControllerTest {
         film.setDuration(55);
         film.setReleaseDate(LocalDate.parse("1995-04-21").toString());
 
-        filmController.create(film);
+        Film createdFilm = filmController.create(film);
 
         Film film2 = new Film();
         film2.setName("New name");
-        film2.setId(1L);
+        film2.setId(createdFilm.getId());
         film2.setDescription("Small descr");
         film2.setDuration(55);
         film2.setReleaseDate(LocalDate.parse("1995-04-21").toString());

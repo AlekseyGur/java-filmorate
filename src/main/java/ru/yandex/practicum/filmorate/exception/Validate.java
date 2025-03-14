@@ -11,7 +11,6 @@ import ru.yandex.practicum.filmorate.model.User;
 public class Validate {
 
     public static void film(@Valid Film film) {
-        // проверяем выполнение необходимых условий
         if (film.getName() == null || film.getName().isBlank()) {
             throw new ValidationException("Название не может быть пустым");
         }
@@ -38,9 +37,7 @@ public class Validate {
         }
 
         if (user.getName() == null || user.getName().isBlank()) {
-            // throw new ValidationException(
-            // "Имя для отображения может быть пустым — в таком случае будет использован
-            // логин");
+            // Имя может быть пустым — в таком случае будет использован
             user.setName(user.getLogin());
         }
 
