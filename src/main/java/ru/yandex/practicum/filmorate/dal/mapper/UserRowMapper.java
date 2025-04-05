@@ -7,15 +7,15 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
-import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.dal.dto.UserDto;
 
 @Component
-public class UserRowMapper implements RowMapper<User> {
+public class UserRowMapper implements RowMapper<UserDto> {
     @SuppressWarnings("null")
     @Override
     @Nullable
-    public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-        User user = new User();
+    public UserDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+        UserDto user = new UserDto();
         user.setId(rs.getLong("id"));
         user.setEmail(rs.getString("email"));
         user.setLogin(rs.getString("login"));

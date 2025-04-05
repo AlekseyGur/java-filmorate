@@ -1,17 +1,20 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import java.util.List;
+import java.util.Optional;
+
+import ru.yandex.practicum.filmorate.dal.dto.UserDto;
 import ru.yandex.practicum.filmorate.model.User;
 
 public interface UserStorage {
     // Добавляет нового пользователя в хранилище
-    User addUser(User user);
+    Optional<UserDto> addUser(User user);
 
     // Получает пользователя по его уникальному идентификатору
-    User getUser(Long id);
+    Optional<UserDto> getUser(Long id);
 
     // Обновляет информацию о пользователе
-    User updateUser(User user);
+    Optional<UserDto> updateUser(User user);
 
     // Удаляет пользователя по его уникальному идентификатору
     void deleteUser(Long id);
@@ -23,11 +26,11 @@ public interface UserStorage {
     void removeFriend(Long userId, Long friendId);
 
     // Получает список друзей указанного пользователя
-    List<User> getFriends(Long userId);
+    List<UserDto> getFriends(Long userId);
 
     // Получает список общих друзей двух пользователей
-    List<User> getCommonFriends(Long userId, Long otherId);
+    List<UserDto> getCommonFriends(Long userId, Long otherId);
 
     // Все пользователи
-    List<User> findAll();
+    List<UserDto> findAll();
 }

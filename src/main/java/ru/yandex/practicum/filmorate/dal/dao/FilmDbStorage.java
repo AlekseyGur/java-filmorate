@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.dal.dto.FilmDto;
-import ru.yandex.practicum.filmorate.dal.mapper.FilmDtoRowMapper;
+import ru.yandex.practicum.filmorate.dal.mapper.FilmRowMapper;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
@@ -30,12 +30,12 @@ public class FilmDbStorage extends BaseRepository<FilmDto> implements FilmStorag
     private static final String LIKES_FILMS_DESC = "SELECT f.*, COUNT(l.*) AS likes_count FROM films f LEFT JOIN films_likes l ON f.id = l.film_id GROUP BY f.id ORDER BY likes_count DESC;";
 
     @Autowired
-    public FilmDbStorage(JdbcTemplate jdbc, FilmDtoRowMapper mapper) {
+    public FilmDbStorage(JdbcTemplate jdbc, FilmRowMapper mapper) {
         super(jdbc, mapper);
     }
 
     @Override
-    public FilmDto addFilm(Film film) {
+    public Optional<FilmDto> addFilm(Film film) {
         Long mpaId = (film.getMpa() == null) ? null : film.getMpa().getId();
         Long id = insert(
                 FILM_ADD,
@@ -45,12 +45,12 @@ public class FilmDbStorage extends BaseRepository<FilmDto> implements FilmStorag
                 film.getDuration(),
                 mpaId);
 
-        return getFilmImpl(id).orElse(null);
+        return Optional.ofNullable(getFilmImpl(id).orElse(null));
     }
 
     @Override
-    public FilmDto getFilm(Long id) {
-        return getFilmImpl(id).orElse(null);
+    public Optional<FilmDto> getFilm(Long id) {
+        return Optional.ofNullable(getFilmImpl(id).orElse(null));
     }
 
     @Override
@@ -75,7 +75,7 @@ public class FilmDbStorage extends BaseRepository<FilmDto> implements FilmStorag
     }
 
     @Override
-    public FilmDto updateFilm(Film film) {
+    public Optional<FilmDto> updateFilm(Film film) {
         Long mpaId = (film.getMpa() == null) ? null : film.getMpa().getId();
         update(FILM_UPDATE,
                 film.getName(),
@@ -85,7 +85,7 @@ public class FilmDbStorage extends BaseRepository<FilmDto> implements FilmStorag
                 mpaId,
                 film.getId());
 
-        return getFilmImpl(film.getId()).orElse(null);
+        return Optional.ofNullable(getFilmImpl(film.getId()).orElse(null));
     }
 
     private Optional<FilmDto> getFilmImpl(Long id) {

@@ -8,13 +8,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
+import ru.yandex.practicum.filmorate.dal.dto.UserDto;
 import ru.yandex.practicum.filmorate.dal.mapper.UserRowMapper;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 @Component
 @Repository
-public class UserDbStorage extends BaseRepository<User> implements UserStorage {
+public class UserDbStorage extends BaseRepository<UserDto> implements UserStorage {
     private static final String USER_ADD = "INSERT INTO users(email, login, name, birthday) VALUES (?, ?, ?, ?);";
     private static final String USER_GET_BY_ID = "SELECT * FROM users WHERE id = ?;";
     private static final String USER_GET_ALL = "SELECT * FROM users;";
@@ -32,23 +33,23 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
     }
 
     @Override
-    public User addUser(User user) {
+    public Optional<UserDto> addUser(User user) {
         long id = insert(USER_ADD,
                 user.getEmail(),
                 user.getLogin(),
                 user.getName(),
                 user.getBirthday());
 
-        return getUserImpl(id).orElse(null);
+        return Optional.ofNullable(getUserImpl(id).orElse(null));
     }
 
     @Override
-    public User getUser(Long id) {
-        return getUserImpl(id).orElse(null);
+    public Optional<UserDto> getUser(Long id) {
+        return Optional.ofNullable(getUserImpl(id).orElse(null));
     }
 
     @Override
-    public User updateUser(User user) {
+    public Optional<UserDto> updateUser(User user) {
         update(USER_UPDATE,
                 user.getEmail(),
                 user.getLogin(),
@@ -56,7 +57,7 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
                 user.getBirthday(),
                 user.getId());
 
-        return getUserImpl(user.getId()).orElse(null);
+        return Optional.ofNullable(getUserImpl(user.getId()).orElse(null));
     }
 
     @Override
@@ -75,17 +76,17 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
     }
 
     @Override
-    public List<User> getFriends(Long userId) {
+    public List<UserDto> getFriends(Long userId) {
         return findMany(FRIEND_GET_ALL, userId);
     }
 
     @Override
-    public List<User> getCommonFriends(Long userId, Long otherId) {
+    public List<UserDto> getCommonFriends(Long userId, Long otherId) {
         return findMany(FRIEND_COMMON, userId, otherId);
     }
 
     @Override
-    public List<User> findAll() {
+    public List<UserDto> findAll() {
         return findMany(USER_GET_ALL);
     }
 
@@ -93,7 +94,7 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
         return findManyIds(USERS_LIKED_FILM, filmId);
     }
 
-    private Optional<User> getUserImpl(Long id) {
+    private Optional<UserDto> getUserImpl(Long id) {
         return findOne(USER_GET_BY_ID, id);
     }
 }
