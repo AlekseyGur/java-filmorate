@@ -29,8 +29,6 @@ public class FilmControllerTest {
 
     @Test
     void testCreateNormal() {
-        // filmController = new FilmController();
-
         Film film = new Film();
         film.setName("Any name");
         film.setDescription("Small descr");

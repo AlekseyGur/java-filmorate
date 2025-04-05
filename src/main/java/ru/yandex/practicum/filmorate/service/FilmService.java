@@ -49,7 +49,7 @@ public class FilmService {
         checkMpaExistThrowIfNot(film);
         List<Long> genresIds = filterGenreThrowIfNotExist(film);
 
-        FilmDto savedFilmDto = filmStorage.addFilm(film);
+        FilmDto savedFilmDto = filmStorage.addFilm(film).orElse(null);
         updateFilmGenresIds(savedFilmDto.getId(), genresIds);
 
         return getFilmImpl(savedFilmDto.getId());
@@ -62,7 +62,7 @@ public class FilmService {
         checkMpaExistThrowIfNot(film);
         List<Long> genresIds = filterGenreThrowIfNotExist(film);
 
-        FilmDto savedFilmDto = filmStorage.updateFilm(film);
+        FilmDto savedFilmDto = filmStorage.updateFilm(film).orElse(null);
         updateFilmGenresIds(savedFilmDto.getId(), genresIds);
 
         return getFilmImpl(savedFilmDto.getId());
@@ -146,7 +146,7 @@ public class FilmService {
     }
 
     private Film getFilmImpl(Long filmId) {
-        FilmDto film = filmStorage.getFilm(filmId);
+        FilmDto film = filmStorage.getFilm(filmId).orElse(null);
         return addMetaInfoToFilm(film);
     }
 

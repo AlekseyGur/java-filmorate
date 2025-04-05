@@ -1,17 +1,21 @@
 package ru.yandex.practicum.filmorate.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.dal.dao.ToolsDb;
+import ru.yandex.practicum.filmorate.dal.dto.UserDto;
 import ru.yandex.practicum.filmorate.exception.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
+@Slf4j
 @Component
 @Service
 @RequiredArgsConstructor
@@ -20,16 +24,16 @@ public class UserService {
     private final ToolsDb toolsDb;
 
     public List<User> findAll() {
-        return userStorage.findAll();
+        return convertUserDtoToUser(userStorage.findAll());
     }
 
     public User getUser(Long id) {
         checkUserNotNullAndIdExistOrThrowIfNot(id);
-        return userStorage.getUser(id);
+        return convertUserDtoToUser(userStorage.getUser(id).orElse(null));
     }
 
     public User addUser(User user) {
-        return userStorage.addUser(user);
+        return convertUserDtoToUser(userStorage.addUser(user).orElse(null));
     }
 
     public void deleteUser(Long id) {
@@ -48,17 +52,31 @@ public class UserService {
 
     public List<User> getFriends(Long userId) {
         checkUserNotNullAndIdExistOrThrowIfNot(userId);
-        return userStorage.getFriends(userId);
+        return convertUserDtoToUser(userStorage.getFriends(userId));
     }
 
     public List<User> getCommonFriends(Long userId, Long otherUserId) {
         checkUsersExistOrThrowIfNot(userId, otherUserId);
-        return userStorage.getCommonFriends(userId, otherUserId);
+        return convertUserDtoToUser(userStorage.getCommonFriends(userId, otherUserId));
     }
 
     public User updateUser(User user) {
         checkUserNotNullAndIdExistOrThrowIfNot(user);
-        return userStorage.updateUser(user);
+        return convertUserDtoToUser(userStorage.updateUser(user).orElse(null));
+    }
+
+    public List<User> convertUserDtoToUser(List<UserDto> usersDto) {
+        return usersDto.stream().map(this::convertUserDtoToUser).collect(Collectors.toList());
+    }
+
+    public User convertUserDtoToUser(UserDto userDto) {
+        User user = new User();
+        user.setId(userDto.getId());
+        user.setEmail(userDto.getEmail());
+        user.setName(userDto.getName());
+        user.setBirthday(userDto.getBirthday());
+        user.setLogin(userDto.getLogin());
+        return user;
     }
 
     public void checkUserNotNullAndIdExistOrThrowIfNot(Long id) {
