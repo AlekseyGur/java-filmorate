@@ -5,6 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import jakarta.validation.Valid;
+import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Review;
 import ru.yandex.practicum.filmorate.model.User;
@@ -44,6 +45,12 @@ public class Validate {
 
         if (user.getBirthday() != null && LocalDate.parse(user.getBirthday()).isAfter(LocalDate.now())) {
             throw new ValidationException("Дата рождения не может быть в будущем");
+        }
+    }
+
+    public static void director(@Valid Director director) {
+        if (director.getName() == null || director.getName().isBlank()) {
+            throw new ValidationException("Укажите имя режиссёра");
         }
     }
 

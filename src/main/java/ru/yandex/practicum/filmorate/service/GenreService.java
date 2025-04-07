@@ -1,8 +1,6 @@
 package ru.yandex.practicum.filmorate.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -71,12 +69,9 @@ public class GenreService {
         List<Long> genresIdsFiltered = null;
 
         if (genresIds != null) {
-            genresIdsFiltered = genresIds.stream().filter(x -> x != null).toList();
+            genresIdsFiltered = genresIds.stream().filter(x -> x != null).distinct().toList();
 
-            // Оставим только уникальные
-            genresIdsFiltered = new ArrayList<>(new HashSet<>(genresIdsFiltered));
-
-            if (!toolsDb.unsafeCheckTableContainsIds("genre", genresIdsFiltered)) {
+            if (!genresIdsFiltered.isEmpty() && !toolsDb.unsafeCheckTableContainsIds("genre", genresIdsFiltered)) {
                 throw new NotFoundException(
                         "В списке жанров найден неизвестный id жанра: " + genresIdsFiltered.toString());
             }
