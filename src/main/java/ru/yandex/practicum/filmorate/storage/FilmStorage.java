@@ -27,4 +27,7 @@ public interface FilmStorage {
 
     // Получает список популярных фильмов
     List<FilmDto> getPopularFilms(Integer count);
+
+    // Получает список фильмов режиссёра с сортировкой
+    List<FilmDto> findAllByDirectorIdSort(Long directorId, String sortBy);
 }

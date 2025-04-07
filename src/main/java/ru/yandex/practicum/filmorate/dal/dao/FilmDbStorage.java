@@ -25,9 +25,25 @@ public class FilmDbStorage extends BaseRepository<FilmDto> implements FilmStorag
     private static final String FILM_GET_BY_ID = "SELECT * FROM films WHERE id = ?;";
     private static final String FILMS_GET_BY_IDS = "SELECT * FROM films WHERE id IN (?);";
     private static final String FILM_GET_ALL = "SELECT * FROM films;";
-    private static final String FILM_UPDATE = "UPDATE films SET name = ?, description = ?, release_date = ?, duration = ?, mpa = ? WHERE id = ?;";
+    private static final String FILM_UPDATE = "UPDATE films SET name = ?, description = ?, release_date = ?, duration = ?, mpa = ? WHERE id = ? LIMIT 1;";
     private static final String FILM_DELETE = "DELETE FROM films WHERE id = ? LIMIT 1;";
     private static final String LIKES_FILMS_DESC = "SELECT f.*, COUNT(l.*) AS likes_count FROM films f LEFT JOIN films_likes l ON f.id = l.film_id GROUP BY f.id ORDER BY likes_count DESC;";
+
+    private static final String FILMS_GET_BY_DIRECTOR_SORT_YEAR = """
+            SELECT f.*
+            FROM films f
+            LEFT JOIN films_directors d ON f.id = d.film_id
+            WHERE d.director_id = ?
+            GROUP BY f.id
+            ORDER BY YEAR(f.release_date) ASC;""";
+    private static final String FILMS_GET_BY_DIRECTOR_SORT_LIKES = """
+            SELECT f.*
+            FROM films f
+            LEFT JOIN films_directors d ON f.id = d.film_id
+            LEFT JOIN films_likes l ON f.id = l.film_id
+            WHERE d.director_id = ?
+            GROUP BY f.id
+            ORDER BY COUNT(l.*) DESC;""";
 
     @Autowired
     public FilmDbStorage(JdbcTemplate jdbc, FilmRowMapper mapper) {
@@ -61,6 +77,14 @@ public class FilmDbStorage extends BaseRepository<FilmDto> implements FilmStorag
     @Override
     public List<FilmDto> findAll() {
         return findMany(FILM_GET_ALL);
+    }
+
+    @Override
+    public List<FilmDto> findAllByDirectorIdSort(Long directorId, String sortBy) {
+        if (sortBy.equals("likes")) {
+            return findMany(FILMS_GET_BY_DIRECTOR_SORT_LIKES, directorId);
+        }
+        return findMany(FILMS_GET_BY_DIRECTOR_SORT_YEAR, directorId);
     }
 
     @Override
