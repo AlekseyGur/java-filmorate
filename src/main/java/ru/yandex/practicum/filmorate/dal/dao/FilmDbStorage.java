@@ -45,6 +45,20 @@ public class FilmDbStorage extends BaseRepository<FilmDto> implements FilmStorag
             GROUP BY f.id
             ORDER BY COUNT(l.*) DESC;""";
 
+    private static final String FILMS_GET_BY_TITLE = "SELECT * FROM films WHERE LOWER(name) LIKE ?;";
+    private static final String FILMS_GET_BY_DIRECTOR_NAME = """
+            SELECT f.*
+            FROM films f
+            LEFT JOIN films_directors fd ON f.id = fd.film_id
+            LEFT JOIN directors d ON fd.director_id = d.id
+            WHERE LOWER(d.name) LIKE ?;""";
+    private static final String FILMS_GET_BY_TITLE_OR_BY_DIRECTOR_NAME = """
+            SELECT f.*
+            FROM films f
+            LEFT JOIN films_directors fd ON f.id = fd.film_id
+            LEFT JOIN directors d ON fd.director_id = d.id
+            WHERE LOWER(d.name) LIKE ? OR LOWER(f.name) LIKE ?;""";
+
     @Autowired
     public FilmDbStorage(JdbcTemplate jdbc, FilmRowMapper mapper) {
         super(jdbc, mapper);
@@ -110,6 +124,22 @@ public class FilmDbStorage extends BaseRepository<FilmDto> implements FilmStorag
                 film.getId());
 
         return Optional.ofNullable(getFilmImpl(film.getId()).orElse(null));
+    }
+
+    @Override
+    public List<FilmDto> searchByTitle(String query) {
+        return findMany(FILMS_GET_BY_TITLE, "%" + query + "%");
+    }
+
+    @Override
+    public List<FilmDto> searchByDirector(String query) {
+        return findMany(FILMS_GET_BY_DIRECTOR_NAME, "%" + query + "%");
+    }
+
+    @Override
+    public List<FilmDto> searchByTitleOrDirector(String query) {
+        String q = "%" + query + "%";
+        return findMany(FILMS_GET_BY_TITLE_OR_BY_DIRECTOR_NAME, q, q);
     }
 
     private Optional<FilmDto> getFilmImpl(Long id) {
