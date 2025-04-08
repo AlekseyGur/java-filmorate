@@ -39,4 +39,6 @@ public interface FilmStorage {
 
     // Получает список фильмов режиссёра с сортировкой
     List<FilmDto> findAllByDirectorIdSort(Long directorId, String sortBy);
+
+    List<FilmDto> getCommonFilmsWithFriend(Long userId, Long friendId);
 }

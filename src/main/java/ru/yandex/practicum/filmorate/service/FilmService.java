@@ -96,6 +96,11 @@ public class FilmService {
         return addMetaInfoToFilms(films);
     }
 
+    public List<Film> getCommonFilmsWithFriend(Long userId, Long friendId) {
+        List<FilmDto> filmDtos = filmStorage.getCommonFilmsWithFriend(userId, friendId);
+        return  addMetaInfoToFilms(filmDtos);
+    }
+
     public void checkFilmNotNullAndIdExistOrThrowIfNot(Long filmId) {
         if (!toolsDb.unsafeCheckTableContainsId("films", filmId)) {
             throw new NotFoundException("Фильм с id = " + filmId + " не найден");
