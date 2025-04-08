@@ -74,6 +74,20 @@ public class UserService {
         return convertUserDtoToUser(userStorage.updateUser(user).orElse(null));
     }
 
+    public List<User> convertUserDtoToUser(List<UserDto> usersDto) {
+        return usersDto.stream().map(this::convertUserDtoToUser).collect(Collectors.toList());
+    }
+
+    public User convertUserDtoToUser(UserDto userDto) {
+        User user = new User();
+        user.setId(userDto.getId());
+        user.setEmail(userDto.getEmail());
+        user.setName(userDto.getName());
+        user.setBirthday(userDto.getBirthday());
+        user.setLogin(userDto.getLogin());
+        return user;
+    }
+
     public void checkUserNotNullAndIdExistOrThrowIfNot(Long id) {
         if (!toolsDb.unsafeCheckTableContainsId("users", id)) {
             throw new NotFoundException("Пользователь с id = " + id + " не найден");
