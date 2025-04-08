@@ -33,7 +33,6 @@ CREATE TABLE IF NOT EXISTS films (
     name VARCHAR(200) NOT NULL CHECK (name <> ''),
     description VARCHAR(200),
     release_date DATE, -- CHECK (release_date <= CURRENT_DATE), -- требуют тесты ветки add-director
-    release_date DATE, -- CHECK (release_date <= CURRENT_DATE), -- требуют тесты ветки add-director
     duration INT CHECK (duration > 0),
     mpa BIGINT REFERENCES mpa(id)
 );
