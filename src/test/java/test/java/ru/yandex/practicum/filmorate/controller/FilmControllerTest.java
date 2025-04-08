@@ -1,9 +1,5 @@
 package test.java.ru.yandex.practicum.filmorate.controller;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -16,9 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.yandex.practicum.filmorate.FilmorateApplication;
 import ru.yandex.practicum.filmorate.controller.DirectorController;
 import ru.yandex.practicum.filmorate.controller.FilmController;
+import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = FilmorateApplication.class)
 @Transactional
@@ -26,10 +26,13 @@ public class FilmControllerTest {
     private FilmController filmController;
     @Autowired
     private DirectorController directorController;
+    @Autowired
+    private UserController userController;
 
     @Autowired
-    public FilmControllerTest(FilmController filmController) {
+    public FilmControllerTest(FilmController filmController, UserController userController) {
         this.filmController = filmController;
+        this.userController = userController;
     }
 
     @Test
@@ -255,5 +258,48 @@ public class FilmControllerTest {
         String by = "director,title";
         List<Film> filmsSearch = filmController.search(query, by);
         assertTrue(filmsSearch.size() == 1, "Должен быть найден один фильм");
+    }
+
+
+    @Test
+    void getCommonFilmsWithUser() {
+        Film film = new Film();
+        film.setName("Крадущийся тигр, затаившийся дракон ");
+        film.setDescription("Descr 1");
+        film.setDuration(55);
+        film.setReleaseDate(Film.MIN_RELEASE_DATE);
+        film.setId(1L);
+
+        Director directorFirst = new Director();
+        directorFirst.setName("Director1 name");
+
+        directorFirst = directorController.add(directorFirst);
+
+        film.setDirectors(List.of(directorFirst));
+
+        filmController.create(film);
+
+        User user = new User();
+        user.setId(1L);
+        user.setLogin("login");
+        user.setName("name");
+        user.setEmail("test@test.test");
+        user.setBirthday(LocalDate.parse("1995-04-21").toString());
+
+        userController.addUser(user);
+
+        User secondUser = new User();
+        secondUser.setId(2L);
+        secondUser.setLogin("secondLogin");
+        secondUser.setName("secondName");
+        secondUser.setEmail("secondTest@test.test");
+        secondUser.setBirthday(LocalDate.parse("1995-04-22").toString());
+
+        userController.addUser(secondUser);
+
+        filmController.addLike(film.getId(), user.getId());
+        filmController.addLike(film.getId(), secondUser.getId());
+
+        assertEquals(film, filmController.findCommonFilmsWithFriend(user.getId(), secondUser.getId()).get(0));
     }
 }
