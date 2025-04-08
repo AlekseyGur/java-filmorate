@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 
 import jakarta.validation.Valid;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Review;
 import ru.yandex.practicum.filmorate.model.User;
 
 public class Validate {
@@ -43,6 +44,24 @@ public class Validate {
 
         if (user.getBirthday() != null && LocalDate.parse(user.getBirthday()).isAfter(LocalDate.now())) {
             throw new ValidationException("Дата рождения не может быть в будущем");
+        }
+    }
+
+    public static void review(@Valid Review review) {
+        if (review == null) {
+            throw new ConstraintViolationException("Укажите данные отзыва");
+        }
+        if (review.getContent() == null || review.getContent().isBlank()) {
+            throw new ConstraintViolationException("Отзыв не может быть пустым");
+        }
+        if (review.getFilmId() == null) {
+            throw new ConstraintViolationException("Укажите id фильма");
+        }
+        if (review.getUserId() == null) {
+            throw new ConstraintViolationException("Укажите id пользователя");
+        }
+        if (review.getIsPositive() == null) {
+            throw new ConstraintViolationException("Укажите оценку отзыва");
         }
     }
 
