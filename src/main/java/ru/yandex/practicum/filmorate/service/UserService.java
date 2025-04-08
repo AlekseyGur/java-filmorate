@@ -12,7 +12,10 @@ import ru.yandex.practicum.filmorate.dal.dao.ToolsDb;
 import ru.yandex.practicum.filmorate.dal.dto.UserDto;
 import ru.yandex.practicum.filmorate.exception.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.LikeStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 @Slf4j
@@ -21,6 +24,8 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 @RequiredArgsConstructor
 public class UserService {
     private final UserStorage userStorage;
+    private final FilmStorage filmStorage;
+    private final FilmService filmService;
     private final ToolsDb toolsDb;
 
     public List<User> findAll() {
@@ -58,6 +63,10 @@ public class UserService {
     public List<User> getCommonFriends(Long userId, Long otherUserId) {
         checkUsersExistOrThrowIfNot(userId, otherUserId);
         return convertUserDtoToUser(userStorage.getCommonFriends(userId, otherUserId));
+    }
+
+    public List<Film> getRecommendations(Long userId) {
+        return filmService.addMetaInfoToFilms(filmStorage.getRecommendedFilms(userId));
     }
 
     public User updateUser(User user) {

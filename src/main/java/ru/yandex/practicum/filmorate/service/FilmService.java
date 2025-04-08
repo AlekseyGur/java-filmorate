@@ -187,7 +187,7 @@ public class FilmService {
         return res;
     }
 
-    private List<Film> addMetaInfoToFilms(List<FilmDto> films) {
+    public List<Film> addMetaInfoToFilms(List<FilmDto> films) {
         List<Long> filmsIds = films.stream().map(x -> x.getId()).toList();
         HashMap<Long, List<Genre>> filmsGenres = genreService.getGenresForFilm(filmsIds);
         HashMap<Long, List<Long>> filmsLikes = likeService.getLikesForFilms(filmsIds);
