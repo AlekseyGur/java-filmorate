@@ -268,7 +268,6 @@ public class FilmControllerTest {
         film.setDescription("Descr 1");
         film.setDuration(55);
         film.setReleaseDate(Film.MIN_RELEASE_DATE);
-        film.setId(1L);
 
         Director directorFirst = new Director();
         directorFirst.setName("Director1 name");
@@ -277,25 +276,23 @@ public class FilmControllerTest {
 
         film.setDirectors(List.of(directorFirst));
 
-        filmController.create(film);
+        film = filmController.create(film);
 
         User user = new User();
-        user.setId(1L);
         user.setLogin("login");
         user.setName("name");
         user.setEmail("test@test.test");
         user.setBirthday(LocalDate.parse("1995-04-21").toString());
 
-        userController.addUser(user);
+        user = userController.addUser(user);
 
         User secondUser = new User();
-        secondUser.setId(2L);
         secondUser.setLogin("secondLogin");
         secondUser.setName("secondName");
         secondUser.setEmail("secondTest@test.test");
         secondUser.setBirthday(LocalDate.parse("1995-04-22").toString());
 
-        userController.addUser(secondUser);
+        secondUser = userController.addUser(secondUser);
 
         filmController.addLike(film.getId(), user.getId());
         filmController.addLike(film.getId(), secondUser.getId());
