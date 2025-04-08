@@ -76,13 +76,13 @@ public class FilmDbStorage extends BaseRepository<FilmDto> implements FilmStorag
             JOIN films_likes fl ON f.id = fl.film_id
             WHERE fl.user_id = (SELECT user_id FROM most_similar_user)
                 AND f.id NOT IN (
-                    SELECT film_id 
-                    FROM films_likes 
+                    SELECT film_id
+                    FROM films_likes
                     WHERE user_id = ?
                 )
             ORDER BY (
-                SELECT COUNT(*) 
-                FROM films_likes 
+                SELECT COUNT(*)
+                FROM films_likes
                 WHERE film_id = f.id
             ) DESC;
     """;
