@@ -28,6 +28,15 @@ public interface FilmStorage {
     // Получает список популярных фильмов
     List<FilmDto> getPopularFilms(Integer count);
 
+    // Поиск по фильмам (по названию)
+    List<FilmDto> searchByTitle(String query);
+
+    // Поиск по фильмам (по режиссёру)
+    List<FilmDto> searchByDirector(String query);
+
+    // Поиск по фильмам (по названию и режиссёру)
+    List<FilmDto> searchByTitleOrDirector(String query);
+
     // Получает список фильмов режиссёра с сортировкой
     List<FilmDto> findAllByDirectorIdSort(Long directorId, String sortBy);
 }

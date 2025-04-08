@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +14,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.yandex.practicum.filmorate.FilmorateApplication;
+import ru.yandex.practicum.filmorate.controller.DirectorController;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 
 @SpringBootTest(classes = FilmorateApplication.class)
 @Transactional
 public class FilmControllerTest {
     private FilmController filmController;
+    @Autowired
+    private DirectorController directorController;
 
     @Autowired
     public FilmControllerTest(FilmController filmController) {
@@ -142,5 +147,113 @@ public class FilmControllerTest {
 
         assertThrows(ValidationException.class, () -> filmController.create(film3),
                 "Продолжительность должна быть больше нуля!");
+    }
+
+    @Test
+    void testShouldSearchTitle() {
+        Film film = new Film();
+        film.setName("Крадущийся тигр, затаившийся дракон");
+        film.setDescription("Descr 1");
+        film.setDuration(55);
+        film.setReleaseDate(Film.MIN_RELEASE_DATE);
+
+        Film film2 = new Film();
+        film2.setName("Крадущийся в ночи");
+        film2.setDescription("Descr 2");
+        film2.setDuration(11);
+        film2.setReleaseDate(Film.MIN_RELEASE_DATE);
+
+        filmController.create(film);
+        filmController.create(film2);
+
+        List<Film> films = filmController.findAll();
+        assertTrue(films.size() == 2, "Должно быть сохранено два фильма");
+
+        String query = "крад";
+        String by = "title";
+        List<Film> filmsSearch = filmController.search(query, by);
+        assertTrue(filmsSearch.size() == 2, "Должно быть найдено два фильма");
+
+        query = "ТиГ";
+        by = "title";
+        filmsSearch = filmController.search(query, by);
+        assertTrue(filmsSearch.size() == 1, "Должен быть найден один фильм");
+    }
+
+    @Test
+    void testShouldSearchDirector() {
+        Director directorFirst = new Director();
+        directorFirst.setName("Director1 name");
+
+        Director directorSecond = new Director();
+        directorSecond.setName("Director2 name");
+
+        directorFirst = directorController.add(directorFirst);
+        directorSecond = directorController.add(directorSecond);
+
+        Film film = new Film();
+        film.setName("Крадущийся тигр, затаившийся дракон");
+        film.setDescription("Descr 1");
+        film.setDuration(55);
+        film.setReleaseDate(Film.MIN_RELEASE_DATE);
+        film.setDirectors(List.of(directorFirst, directorSecond));
+
+        Film film2 = new Film();
+        film2.setName("Крадущийся в ночи");
+        film2.setDescription("Descr 2");
+        film2.setDuration(11);
+        film2.setReleaseDate(Film.MIN_RELEASE_DATE);
+
+        filmController.create(film);
+        filmController.create(film2);
+
+        List<Film> films = filmController.findAll();
+        assertTrue(films.size() == 2, "Должно быть сохранено два фильма");
+
+        String query = "rector2";
+        String by = "director";
+        List<Film> filmsSearch = filmController.search(query, by);
+        assertTrue(filmsSearch.size() == 1, "Должен быть найден один фильм");
+
+        query = "Direct";
+        by = "director";
+        filmsSearch = filmController.search(query, by);
+        assertTrue(filmsSearch.size() == 2, "Должно быть найдено два фильма");
+    }
+
+    @Test
+    void testShouldSearchDirectorOrTitle() {
+        Director directorFirst = new Director();
+        directorFirst.setName("Director1 name");
+
+        Director directorSecond = new Director();
+        directorSecond.setName("Director2 name");
+
+        directorFirst = directorController.add(directorFirst);
+        directorSecond = directorController.add(directorSecond);
+
+        Film film = new Film();
+        film.setName("Крадущийся тигр, затаившийся дракон rEctor1");
+        film.setDescription("Descr 1");
+        film.setDuration(55);
+        film.setReleaseDate(Film.MIN_RELEASE_DATE);
+        film.setDirectors(List.of(directorFirst, directorSecond));
+
+        Film film2 = new Film();
+        film2.setName("Крадущийся в ночи");
+        film2.setDescription("Descr 2");
+        film2.setDuration(11);
+        film2.setReleaseDate(Film.MIN_RELEASE_DATE);
+
+        filmController.create(film);
+        filmController.create(film2);
+
+        List<Film> films = filmController.findAll();
+        assertTrue(films.size() == 2, "Должно быть сохранено два фильма");
+
+        String query = "rector2";
+        String by = "director,title";
+        List<Film> filmsSearch = filmController.search(query, by);
+        assertTrue(filmsSearch.size() == 1, "Должен быть найден один фильм");
     }
 }

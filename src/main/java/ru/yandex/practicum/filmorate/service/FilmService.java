@@ -34,6 +34,17 @@ public class FilmService {
     private final GenreService genreService;
     private final ToolsDb toolsDb;
 
+    public List<Film> search(String query, String by) {
+        query = query.toLowerCase();
+        List<FilmDto> films = switch (by) {
+            case "title" -> filmStorage.searchByTitle(query);
+            case "director" -> filmStorage.searchByDirector(query);
+            default -> filmStorage.searchByTitleOrDirector(query);
+        };
+
+        return addMetaInfoToFilms(films);
+    }
+
     public List<Film> getPopularFilms(int count) {
         List<FilmDto> films = filmStorage.getPopularFilms(count);
         return addMetaInfoToFilms(films);
