@@ -92,13 +92,11 @@ public class FilmService {
         if (!(sortBy.equals("year") || sortBy.equals("likes"))) {
             throw new ConditionsNotMetException("Необходимо передать данные фильма");
         }
-        List<FilmDto> films = filmStorage.findAllByDirectorIdSort(directorId, sortBy);
-        return addMetaInfoToFilms(films);
+        return addMetaInfoToFilms(filmStorage.findAllByDirectorIdSort(directorId, sortBy));
     }
 
     public List<Film> getCommonFilmsWithFriend(Long userId, Long friendId) {
-        List<FilmDto> filmDtos = filmStorage.getCommonFilmsWithFriend(userId, friendId);
-        return  addMetaInfoToFilms(filmDtos);
+        return addMetaInfoToFilms(filmStorage.getCommonFilmsWithFriend(userId, friendId));
     }
 
     public void checkFilmNotNullAndIdExistOrThrowIfNot(Long filmId) {
