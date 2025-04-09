@@ -12,6 +12,8 @@ import ru.yandex.practicum.filmorate.dal.dao.ToolsDb;
 import ru.yandex.practicum.filmorate.dal.dto.UserDto;
 import ru.yandex.practicum.filmorate.exception.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.model.FeedEventType;
+import ru.yandex.practicum.filmorate.model.FeedOperation;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
@@ -22,6 +24,7 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 @RequiredArgsConstructor
 public class UserService {
     private final UserStorage userStorage;
+    private final FeedService feedService;
     private final FilmService filmService;
     private final ToolsDb toolsDb;
 
@@ -45,11 +48,13 @@ public class UserService {
     public void addFriend(Long userId, Long friendId) {
         checkUsersExistOrThrowIfNot(userId, friendId);
         userStorage.addFriend(userId, friendId);
+        feedService.add(userId, friendId, FeedEventType.FRIEND, FeedOperation.ADD);
     }
 
     public void removeFriend(Long userId, Long friendId) {
         checkUsersExistOrThrowIfNot(userId, friendId);
         userStorage.removeFriend(userId, friendId);
+        feedService.add(userId, friendId, FeedEventType.FRIEND, FeedOperation.REMOVE);
     }
 
     public List<User> getFriends(Long userId) {

@@ -7,8 +7,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.exception.Validate;
+import ru.yandex.practicum.filmorate.model.Feed;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.FeedService;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import java.util.List;
@@ -19,6 +21,13 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
+    private final FeedService feedService;
+
+    @GetMapping("/{id}/feed")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Feed> findByUser(@PathVariable Long id) {
+        return feedService.findByUser(id);
+    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
