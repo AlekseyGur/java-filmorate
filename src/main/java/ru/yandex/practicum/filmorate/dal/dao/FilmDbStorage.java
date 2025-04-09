@@ -28,6 +28,16 @@ public class FilmDbStorage extends BaseRepository<FilmDto> implements FilmStorag
     private static final String FILM_UPDATE = "UPDATE films SET name = ?, description = ?, release_date = ?, duration = ?, mpa = ? WHERE id = ? LIMIT 1;";
     private static final String FILM_DELETE = "DELETE FROM films WHERE id = ? LIMIT 1;";
     private static final String LIKES_FILMS_DESC = "SELECT f.*, COUNT(l.*) AS likes_count FROM films f LEFT JOIN films_likes l ON f.id = l.film_id GROUP BY f.id ORDER BY likes_count DESC;";
+    private static final String GET_COMMON_FILMS_WITH_FRIEND = "SELECT f.* " +
+            "FROM films f " +
+            "WHERE f.id IN (" +
+            "    SELECT l.film_id" +
+            "    FROM films_likes l " +
+            "    JOIN films_likes fl ON l.film_id = fl.film_id " +
+            "    WHERE l.user_id = ? AND fl.user_id = ?" +
+            "    GROUP BY l.film_id" +
+            "    ORDER BY COUNT(*) DESC" +
+            ")";
 
     private static final String FILMS_GET_BY_DIRECTOR_SORT_YEAR = """
             SELECT f.*
@@ -172,6 +182,11 @@ public class FilmDbStorage extends BaseRepository<FilmDto> implements FilmStorag
     public List<FilmDto> searchByTitleOrDirector(String query) {
         String q = "%" + query + "%";
         return findMany(FILMS_GET_BY_TITLE_OR_BY_DIRECTOR_NAME, q, q);
+    }
+
+    @Override
+    public List<FilmDto> getCommonFilmsWithFriend(Long userId, Long friendId) {
+        return findMany(GET_COMMON_FILMS_WITH_FRIEND, userId, friendId);
     }
 
     private Optional<FilmDto> getFilmImpl(Long id) {
