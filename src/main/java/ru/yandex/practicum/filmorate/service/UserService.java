@@ -12,6 +12,7 @@ import ru.yandex.practicum.filmorate.dal.dao.ToolsDb;
 import ru.yandex.practicum.filmorate.dal.dto.UserDto;
 import ru.yandex.practicum.filmorate.exception.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
@@ -21,6 +22,7 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 @RequiredArgsConstructor
 public class UserService {
     private final UserStorage userStorage;
+    private final FilmService filmService;
     private final ToolsDb toolsDb;
 
     public List<User> findAll() {
@@ -60,9 +62,27 @@ public class UserService {
         return convertUserDtoToUser(userStorage.getCommonFriends(userId, otherUserId));
     }
 
+    public List<Film> getRecommendations(Long userId) {
+        return filmService.getRecommendedFilms(userId);
+    }
+
     public User updateUser(User user) {
         checkUserNotNullAndIdExistOrThrowIfNot(user);
         return convertUserDtoToUser(userStorage.updateUser(user).orElse(null));
+    }
+
+    public List<User> convertUserDtoToUser(List<UserDto> usersDto) {
+        return usersDto.stream().map(this::convertUserDtoToUser).collect(Collectors.toList());
+    }
+
+    public User convertUserDtoToUser(UserDto userDto) {
+        User user = new User();
+        user.setId(userDto.getId());
+        user.setEmail(userDto.getEmail());
+        user.setName(userDto.getName());
+        user.setBirthday(userDto.getBirthday());
+        user.setLogin(userDto.getLogin());
+        return user;
     }
 
     public void checkUserNotNullAndIdExistOrThrowIfNot(Long id) {
@@ -76,20 +96,6 @@ public class UserService {
             throw new ConditionsNotMetException("Необходимо передать данные фильма");
         }
         checkUserNotNullAndIdExistOrThrowIfNot(user.getId());
-    }
-
-    private List<User> convertUserDtoToUser(List<UserDto> usersDto) {
-        return usersDto.stream().map(this::convertUserDtoToUser).collect(Collectors.toList());
-    }
-
-    private User convertUserDtoToUser(UserDto userDto) {
-        User user = new User();
-        user.setId(userDto.getId());
-        user.setEmail(userDto.getEmail());
-        user.setName(userDto.getName());
-        user.setBirthday(userDto.getBirthday());
-        user.setLogin(userDto.getLogin());
-        return user;
     }
 
     private void checkUsersExistOrThrowIfNot(Long userId, Long otherId) {

@@ -16,6 +16,8 @@ public interface FilmStorage {
     // Получает список фильмов по id
     List<FilmDto> getFilms(List<Long> filmsIds);
 
+    List<FilmDto> getRecommendedFilms(Long userId);
+
     // Обновляет информацию о фильме
     Optional<FilmDto> updateFilm(Film film);
 

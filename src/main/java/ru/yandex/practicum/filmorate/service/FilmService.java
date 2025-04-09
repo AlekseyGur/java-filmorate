@@ -55,6 +55,10 @@ public class FilmService {
         return getFilmsImpl(List.of(filmId)).get(0);
     }
 
+    public List<Film> getRecommendedFilms(Long userId) {
+        return addMetaInfoToFilms(filmStorage.getRecommendedFilms(userId));
+    }
+
     public List<Film> findAll() {
         List<FilmDto> films = filmStorage.findAll();
         return addMetaInfoToFilms(films);

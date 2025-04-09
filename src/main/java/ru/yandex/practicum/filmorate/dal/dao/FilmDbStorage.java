@@ -59,6 +59,34 @@ public class FilmDbStorage extends BaseRepository<FilmDto> implements FilmStorag
             LEFT JOIN directors d ON fd.director_id = d.id
             WHERE LOWER(d.name) LIKE ? OR LOWER(f.name) LIKE ?;""";
 
+    private static final String FILMS_GET_RECOMMENDATIONS = """
+            WITH most_similar_user AS (
+                SELECT fl2.user_id
+                FROM films_likes fl1
+                JOIN films_likes fl2 ON fl1.film_id = fl2.film_id
+                WHERE fl1.user_id = ?
+                    AND fl2.user_id != ?
+                GROUP BY fl2.user_id
+                ORDER BY COUNT(fl2.film_id) DESC
+                LIMIT 1
+            )
+
+            SELECT f.*
+            FROM films f
+            JOIN films_likes fl ON f.id = fl.film_id
+            WHERE fl.user_id = (SELECT user_id FROM most_similar_user)
+                AND f.id NOT IN (
+                    SELECT film_id
+                    FROM films_likes
+                    WHERE user_id = ?
+                )
+            ORDER BY (
+                SELECT COUNT(*)
+                FROM films_likes
+                WHERE film_id = f.id
+            ) DESC;
+    """;
+
     @Autowired
     public FilmDbStorage(JdbcTemplate jdbc, FilmRowMapper mapper) {
         super(jdbc, mapper);
@@ -81,6 +109,10 @@ public class FilmDbStorage extends BaseRepository<FilmDto> implements FilmStorag
     @Override
     public Optional<FilmDto> getFilm(Long id) {
         return Optional.ofNullable(getFilmImpl(id).orElse(null));
+    }
+
+    public List<FilmDto> getRecommendedFilms(Long userId) {
+        return findMany(FILMS_GET_RECOMMENDATIONS, userId, userId, userId);
     }
 
     @Override
