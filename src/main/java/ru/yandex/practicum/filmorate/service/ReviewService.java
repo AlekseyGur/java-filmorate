@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.dal.dao.ToolsDb;
 import ru.yandex.practicum.filmorate.dal.dto.ReviewDto;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.model.FeedEventType;
+import ru.yandex.practicum.filmorate.model.FeedOperation;
 import ru.yandex.practicum.filmorate.model.Review;
 import ru.yandex.practicum.filmorate.storage.ReviewStorage;
 
@@ -22,23 +24,29 @@ public class ReviewService {
     private final ReviewStorage reviewStorage;
     private final FilmService filmService;
     private final UserService userService;
+    private final FeedService feedService;
     private final ToolsDb toolsDb;
 
     public Review add(Review review) {
         filmService.checkFilmNotNullAndIdExistOrThrowIfNot(review.getFilmId());
         userService.checkUserNotNullAndIdExistOrThrowIfNot(review.getUserId());
-        return convertReviewDtoToReview(reviewStorage.add(review).orElse(null));
+        Review reviewSaved = convertReviewDtoToReview(reviewStorage.add(review).orElse(null));
+        feedService.add(review.getUserId(), reviewSaved.getReviewId(), FeedEventType.REVIEW, FeedOperation.ADD);
+        return reviewSaved;
     }
 
     public Review update(Review review) {
         checkReviewNotNullAndIdExistOrThrowIfNot(review.getReviewId());
         filmService.checkFilmNotNullAndIdExistOrThrowIfNot(review.getFilmId());
         userService.checkUserNotNullAndIdExistOrThrowIfNot(review.getUserId());
+        feedService.add(review.getUserId(), review.getReviewId(), FeedEventType.REVIEW, FeedOperation.UPDATE);
         return convertReviewDtoToReview(reviewStorage.update(review).orElse(null));
     }
 
     public void remove(Long id) {
         checkReviewNotNullAndIdExistOrThrowIfNot(id);
+        Review review = convertReviewDtoToReview(reviewStorage.get(id).orElse(null));
+        feedService.add(review.getUserId(), review.getReviewId(), FeedEventType.REVIEW, FeedOperation.REMOVE);
         reviewStorage.remove(id);
     }
 

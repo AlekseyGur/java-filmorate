@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import ru.yandex.practicum.filmorate.dal.dao.ToolsDb;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.model.FeedEventType;
+import ru.yandex.practicum.filmorate.model.FeedOperation;
 import ru.yandex.practicum.filmorate.storage.LikeStorage;
 
 @Component
@@ -16,6 +18,7 @@ import ru.yandex.practicum.filmorate.storage.LikeStorage;
 @RequiredArgsConstructor
 public class LikeService {
     private final LikeStorage likeStorage;
+    private final FeedService feedService;
     private final ToolsDb toolsDb;
 
     public HashMap<Long, List<Long>> getLikesForFilms(List<Long> filmsIds) {
@@ -24,12 +27,14 @@ public class LikeService {
 
     public void addLike(Long filmId, Long userId) {
         likeStorage.addLike(filmId, userId);
+        feedService.add(userId, filmId, FeedEventType.LIKE, FeedOperation.ADD);
     }
 
     public void removeLike(Long filmId, Long userId) {
         checkUserNotNullAndIdExistOrThrowIfNot(userId);
         checkFilmNotNullAndIdExistOrThrowIfNot(filmId);
         likeStorage.removeLike(filmId, userId);
+        feedService.add(userId, filmId, FeedEventType.LIKE, FeedOperation.REMOVE);
     }
 
     private void checkUserNotNullAndIdExistOrThrowIfNot(Long id) {

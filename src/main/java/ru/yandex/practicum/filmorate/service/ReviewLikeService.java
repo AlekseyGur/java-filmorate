@@ -6,7 +6,8 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
-import ru.yandex.practicum.filmorate.model.ReviewLike;
+import ru.yandex.practicum.filmorate.model.FeedEventType;
+import ru.yandex.practicum.filmorate.model.FeedOperation;
 import ru.yandex.practicum.filmorate.storage.ReviewLikeStorage;
 import ru.yandex.practicum.filmorate.dal.dao.ToolsDb;
 
@@ -18,40 +19,37 @@ public class ReviewLikeService {
     private final ReviewLikeStorage reviewLikeStorage;
     private final ReviewService reviewService;
     private final UserService userService;
+    private final FeedService feedService;
     private final ToolsDb toolsDb;
 
     public void addLike(Long reviewId, Long userId) {
         reviewService.checkReviewNotNullAndIdExistOrThrowIfNot(reviewId);
         userService.checkUserNotNullAndIdExistOrThrowIfNot(userId);
-        reviewLikeStorage.remove(reviewId, userId, false);
-        ReviewLike reviewLike = new ReviewLike();
-        reviewLike.setReviewId(reviewId);
-        reviewLike.setUserId(userId);
-        reviewLike.setIsUseful(true);
-        reviewLikeStorage.add(reviewLike);
+        reviewLikeStorage.remove(userId, reviewId, false);
+        reviewLikeStorage.add(userId, reviewId, true);
+        feedService.add(userId, reviewId, FeedEventType.LIKE, FeedOperation.ADD);
     }
 
     public void addDislike(Long reviewId, Long userId) {
         reviewService.checkReviewNotNullAndIdExistOrThrowIfNot(reviewId);
         userService.checkUserNotNullAndIdExistOrThrowIfNot(userId);
-        reviewLikeStorage.remove(reviewId, userId, true);
-        ReviewLike reviewLike = new ReviewLike();
-        reviewLike.setReviewId(reviewId);
-        reviewLike.setUserId(userId);
-        reviewLike.setIsUseful(false);
-        reviewLikeStorage.add(reviewLike);
+        reviewLikeStorage.remove(userId, reviewId, true);
+        reviewLikeStorage.add(userId, reviewId, false);
+        feedService.add(userId, reviewId, FeedEventType.LIKE, FeedOperation.ADD);
     }
 
     public void removeLike(Long reviewId, Long userId) {
         reviewService.checkReviewNotNullAndIdExistOrThrowIfNot(reviewId);
         userService.checkUserNotNullAndIdExistOrThrowIfNot(userId);
-        reviewLikeStorage.remove(reviewId, userId, true);
+        reviewLikeStorage.remove(userId, reviewId, true);
+        feedService.add(userId, reviewId, FeedEventType.LIKE, FeedOperation.REMOVE);
     }
 
     public void removeDislike(Long reviewId, Long userId) {
         reviewService.checkReviewNotNullAndIdExistOrThrowIfNot(reviewId);
         userService.checkUserNotNullAndIdExistOrThrowIfNot(userId);
-        reviewLikeStorage.remove(reviewId, userId, false);
+        reviewLikeStorage.remove(userId, reviewId, false);
+        feedService.add(userId, reviewId, FeedEventType.LIKE, FeedOperation.REMOVE);
     }
 
     public void checkReviewNotNullAndIdExistOrThrowIfNot(Long reviewId) {

@@ -26,14 +26,20 @@ public class ReviewLikeDbStorage extends BaseRepository<ReviewLikeDto> implement
 
     @Override
     public void add(ReviewLike like) {
-        insert(ADD_LIKE,
-                like.getReviewId(),
-                like.getUserId(),
-                like.getIsUseful());
+        addImpl(like.getUserId(), like.getReviewId(), like.getIsUseful());
     }
 
     @Override
-    public void remove(Long reviewId, Long userId, Boolean likeOrDislike) {
+    public void add(Long userId, Long reviewId, Boolean isUseful) {
+        addImpl(userId, reviewId, isUseful);
+    }
+
+    @Override
+    public void remove(Long userId, Long reviewId, Boolean likeOrDislike) {
         update(DELETE_LIKE, reviewId, userId, likeOrDislike);
+    }
+
+    private void addImpl(Long userId, Long reviewId, Boolean isUseful) {
+        insert(ADD_LIKE, reviewId, userId, isUseful);
     }
 }
