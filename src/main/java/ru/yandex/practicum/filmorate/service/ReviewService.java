@@ -30,22 +30,23 @@ public class ReviewService {
     public Review add(Review review) {
         filmService.checkFilmNotNullAndIdExistOrThrowIfNot(review.getFilmId());
         userService.checkUserNotNullAndIdExistOrThrowIfNot(review.getUserId());
-        feedService.add(review.getUserId(), review.getFilmId(), FeedEventType.REVIEW, FeedOperation.ADD);
-        return convertReviewDtoToReview(reviewStorage.add(review).orElse(null));
+        Review reviewSaved = convertReviewDtoToReview(reviewStorage.add(review).orElse(null));
+        feedService.add(review.getUserId(), reviewSaved.getReviewId(), FeedEventType.REVIEW, FeedOperation.ADD);
+        return reviewSaved;
     }
 
     public Review update(Review review) {
         checkReviewNotNullAndIdExistOrThrowIfNot(review.getReviewId());
         filmService.checkFilmNotNullAndIdExistOrThrowIfNot(review.getFilmId());
         userService.checkUserNotNullAndIdExistOrThrowIfNot(review.getUserId());
-        feedService.add(review.getUserId(), review.getFilmId(), FeedEventType.REVIEW, FeedOperation.UPDATE);
+        feedService.add(review.getUserId(), review.getReviewId(), FeedEventType.REVIEW, FeedOperation.UPDATE);
         return convertReviewDtoToReview(reviewStorage.update(review).orElse(null));
     }
 
     public void remove(Long id) {
         checkReviewNotNullAndIdExistOrThrowIfNot(id);
         Review review = convertReviewDtoToReview(reviewStorage.get(id).orElse(null));
-        feedService.add(review.getUserId(), review.getFilmId(), FeedEventType.REVIEW, FeedOperation.REMOVE);
+        feedService.add(review.getUserId(), review.getReviewId(), FeedEventType.REVIEW, FeedOperation.REMOVE);
         reviewStorage.remove(id);
     }
 
