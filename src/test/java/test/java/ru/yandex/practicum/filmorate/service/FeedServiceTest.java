@@ -1,4 +1,4 @@
-package test.java.ru.yandex.practicum.filmorate.controller;
+package test.java.ru.yandex.practicum.filmorate.service;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -25,7 +25,7 @@ import ru.yandex.practicum.filmorate.service.FeedService;
 
 @SpringBootTest(classes = FilmorateApplication.class)
 @Transactional
-public class FeedControllerTest {
+public class FeedServiceTest {
     @Autowired
     private FeedService feedService;
     @Autowired
