@@ -55,6 +55,10 @@ public class FilmService {
         return getFilmsImpl(List.of(filmId)).get(0);
     }
 
+    public List<Film> getRecommendedFilms(Long userId) {
+        return addMetaInfoToFilms(filmStorage.getRecommendedFilms(userId));
+    }
+
     public List<Film> findAll() {
         List<FilmDto> films = filmStorage.findAll();
         return addMetaInfoToFilms(films);
@@ -187,7 +191,7 @@ public class FilmService {
         return res;
     }
 
-    public List<Film> addMetaInfoToFilms(List<FilmDto> films) {
+    private List<Film> addMetaInfoToFilms(List<FilmDto> films) {
         List<Long> filmsIds = films.stream().map(x -> x.getId()).toList();
         HashMap<Long, List<Genre>> filmsGenres = genreService.getGenresForFilm(filmsIds);
         HashMap<Long, List<Long>> filmsLikes = likeService.getLikesForFilms(filmsIds);

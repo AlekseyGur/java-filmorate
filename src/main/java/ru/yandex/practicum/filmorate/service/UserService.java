@@ -14,7 +14,6 @@ import ru.yandex.practicum.filmorate.exception.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 @Slf4j
@@ -23,7 +22,6 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 @RequiredArgsConstructor
 public class UserService {
     private final UserStorage userStorage;
-    private final FilmStorage filmStorage;
     private final FilmService filmService;
     private final ToolsDb toolsDb;
 
@@ -65,7 +63,7 @@ public class UserService {
     }
 
     public List<Film> getRecommendations(Long userId) {
-        return filmService.addMetaInfoToFilms(filmStorage.getRecommendedFilms(userId));
+        return filmService.getRecommendedFilms(userId);
     }
 
     public User updateUser(User user) {
