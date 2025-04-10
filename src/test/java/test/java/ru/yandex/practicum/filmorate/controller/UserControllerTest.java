@@ -161,7 +161,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void testDeleteUser(){
+    void testDeleteUser() {
         User user = new User();
         user.setLogin("login");
         user.setName("name");

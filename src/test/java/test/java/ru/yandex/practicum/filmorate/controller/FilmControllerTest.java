@@ -301,7 +301,7 @@ public class FilmControllerTest {
     }
 
     @Test
-    void testDeleteFilm(){
+    void testDeleteFilm() {
         Film film = new Film();
         film.setName("Крадущийся тигр, затаившийся дракон ");
         film.setDescription("Descr 1");
