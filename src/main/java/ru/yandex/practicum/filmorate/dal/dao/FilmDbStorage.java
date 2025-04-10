@@ -26,7 +26,7 @@ public class FilmDbStorage extends BaseRepository<FilmDto> implements FilmStorag
     private static final String FILMS_GET_BY_IDS = "SELECT * FROM films WHERE id IN (?);";
     private static final String FILM_GET_ALL = "SELECT * FROM films;";
     private static final String FILM_UPDATE = "UPDATE films SET name = ?, description = ?, release_date = ?, duration = ?, mpa = ? WHERE id = ? LIMIT 1;";
-    private static final String FILM_DELETE = "DELETE FROM films WHERE id = ? LIMIT 1;";
+    private static final String FILM_DELETE = "DELETE FROM films WHERE id = ?;";
     private static final String LIKES_FILMS_DESC = "SELECT f.*, COUNT(l.*) AS likes_count FROM films f LEFT JOIN films_likes l ON f.id = l.film_id GROUP BY f.id ORDER BY likes_count DESC;";
     private static final String GET_COMMON_FILMS_WITH_FRIEND = "SELECT f.* " +
             "FROM films f " +

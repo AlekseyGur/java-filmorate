@@ -1,9 +1,5 @@
 package test.java.ru.yandex.practicum.filmorate.controller;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.time.LocalDate;
 import java.util.Collection;
 
@@ -18,6 +14,8 @@ import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = FilmorateApplication.class)
 @Transactional
@@ -160,6 +158,20 @@ public class UserControllerTest {
 
         assertThrows(ValidationException.class, () -> userController.addUser(user2),
                 "Дата рождения не может быть в будущем!");
+    }
+
+    @Test
+    void testDeleteUser(){
+        User user = new User();
+        user.setLogin("login");
+        user.setName("name");
+        user.setEmail("test@test.test");
+        user.setBirthday(LocalDate.now().toString());
+
+        user = userController.addUser(user);
+        assertEquals(1, userController.findAll().size());
+        userController.delete(user.getId());
+        assertEquals(0, userController.findAll().size());
     }
 
 }

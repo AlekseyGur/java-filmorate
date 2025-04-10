@@ -299,4 +299,26 @@ public class FilmControllerTest {
 
         assertEquals(film, filmController.findCommonFilmsWithFriend(user.getId(), secondUser.getId()).get(0));
     }
+
+    @Test
+    void testDeleteFilm(){
+        Film film = new Film();
+        film.setName("Крадущийся тигр, затаившийся дракон ");
+        film.setDescription("Descr 1");
+        film.setDuration(55);
+        film.setReleaseDate(Film.MIN_RELEASE_DATE);
+
+        Director directorFirst = new Director();
+        directorFirst.setName("Director1 name");
+
+        directorFirst = directorController.add(directorFirst);
+
+        film.setDirectors(List.of(directorFirst));
+
+        film = filmController.create(film);
+
+        assertEquals(1, filmController.findAll().size());
+        filmController.delete(film.getId());
+        assertEquals(0, filmController.findAll().size());
+    }
 }

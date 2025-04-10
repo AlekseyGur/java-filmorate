@@ -91,6 +91,10 @@ public class FilmService {
         return getFilmImpl(savedFilmDto.getId());
     }
 
+    public void delete(Long filmId) {
+        filmStorage.deleteFilm(filmId);
+    }
+
     public List<Film> findByDirectorSort(Long directorId, String sortBy) {
         directorService.checkDirectorNotNullAndIdExistOrThrowIfNot(directorId);
         if (!(sortBy.equals("year") || sortBy.equals("likes"))) {
