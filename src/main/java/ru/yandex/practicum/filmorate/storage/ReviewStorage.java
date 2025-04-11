@@ -15,5 +15,7 @@ public interface ReviewStorage {
 
     List<ReviewDto> getByFilmId(Long filmId, Integer count);
 
+    List<ReviewDto> findAll(Integer count);
+
     Optional<ReviewDto> update(Review review);
 }

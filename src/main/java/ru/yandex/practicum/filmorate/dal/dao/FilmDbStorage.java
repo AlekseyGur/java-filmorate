@@ -74,7 +74,8 @@ public class FilmDbStorage extends BaseRepository<FilmDto> implements FilmStorag
             FROM films f
             LEFT JOIN films_directors fd ON f.id = fd.film_id
             LEFT JOIN directors d ON fd.director_id = d.id
-            WHERE LOWER(d.name) LIKE ? OR LOWER(f.name) LIKE ?;""";
+            WHERE LOWER(d.name) LIKE ? OR LOWER(f.name) LIKE ?
+            ORDER BY f.id DESC;""";
 
     private static final String FILMS_GET_RECOMMENDATIONS = """
             WITH most_similar_user AS (

@@ -42,10 +42,11 @@ public class ReviewDbStorage extends BaseRepository<ReviewDto> implements Review
                 r.user_id,
                 r.content,
                 r.is_positive
-            ORDER BY useful DESC
+            ORDER BY useful DESC, id DESC
             LIMIT ?; """;
     private static final String FIND_BY_ID_WITH_RATING = BEGIN + " WHERE r.id = ? " + END;
     private static final String FIND_BY_FILM_ID_WITH_RATING = BEGIN + " WHERE r.film_id = ? " + END;
+    private static final String FIND_ALL = BEGIN + " " + END;
 
     @Autowired
     public ReviewDbStorage(JdbcTemplate jdbc, ReviewRowMapper mapper) {
@@ -77,6 +78,11 @@ public class ReviewDbStorage extends BaseRepository<ReviewDto> implements Review
     @Override
     public List<ReviewDto> getByFilmId(Long filmId, Integer count) {
         return findMany(FIND_BY_FILM_ID_WITH_RATING, filmId, count);
+    }
+
+    @Override
+    public List<ReviewDto> findAll(Integer count) {
+        return findMany(FIND_ALL, count);
     }
 
     @Override
