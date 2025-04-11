@@ -45,9 +45,8 @@ public class FilmService {
         return addMetaInfoToFilms(films);
     }
 
-    public List<Film> getPopularFilms(int count) {
-        List<FilmDto> films = filmStorage.getPopularFilms(count);
-        return addMetaInfoToFilms(films);
+    public List<Film> getPopularFilms(Integer count, Integer genreId, Integer year) {
+        return addMetaInfoToFilms(filmStorage.getPopularFilms(count, genreId, year));
     }
 
     public Film getFilm(Long filmId) {
