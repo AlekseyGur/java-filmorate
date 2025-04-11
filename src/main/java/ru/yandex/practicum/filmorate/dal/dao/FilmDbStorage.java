@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.dal.mapper.FilmRowMapper;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,7 +28,14 @@ public class FilmDbStorage extends BaseRepository<FilmDto> implements FilmStorag
     private static final String FILM_GET_ALL = "SELECT * FROM films;";
     private static final String FILM_UPDATE = "UPDATE films SET name = ?, description = ?, release_date = ?, duration = ?, mpa = ? WHERE id = ? LIMIT 1;";
     private static final String FILM_DELETE = "DELETE FROM films WHERE id = ? LIMIT 1;";
-    private static final String LIKES_FILMS_DESC = "SELECT f.*, COUNT(l.*) AS likes_count FROM films f LEFT JOIN films_likes l ON f.id = l.film_id GROUP BY f.id ORDER BY likes_count DESC;";
+
+    private static final String GET_SORTED_POPULAR_FILMS = """
+            SELECT f.*, COUNT(fl.user_id) AS likes_count
+            FROM films AS f
+            JOIN films_likes AS fl ON f.id = fl.film_id
+            JOIN films_genres AS fg ON f.id = fg.film_id
+    """;
+
     private static final String GET_COMMON_FILMS_WITH_FRIEND = "SELECT f.* " +
             "FROM films f " +
             "WHERE f.id IN (" +
@@ -121,6 +129,7 @@ public class FilmDbStorage extends BaseRepository<FilmDto> implements FilmStorag
         return Optional.ofNullable(getFilmImpl(id).orElse(null));
     }
 
+    @Override
     public List<FilmDto> getRecommendedFilms(Long userId) {
         return findMany(FILMS_GET_RECOMMENDATIONS, userId, userId, userId);
     }
@@ -144,8 +153,30 @@ public class FilmDbStorage extends BaseRepository<FilmDto> implements FilmStorag
     }
 
     @Override
-    public List<FilmDto> getPopularFilms(Integer count) {
-        return findMany(LIKES_FILMS_DESC);
+    public List<FilmDto> getPopularFilms(Integer count, Integer genreId, Integer year) {
+        StringBuilder request = new StringBuilder(GET_SORTED_POPULAR_FILMS);
+        List<Object> params = new ArrayList<>();
+
+        if (genreId != null && year != null) {
+            request.append(" WHERE fg.genre_id = ? AND EXTRACT(YEAR FROM f.release_date) = ?");
+            params.add(genreId);
+            params.add(year);
+        } else if (genreId != null) {
+            request.append(" WHERE fg.genre_id = ?");
+            params.add(genreId);
+        } else if (year != null) {
+            request.append(" WHERE EXTRACT(YEAR FROM f.release_date) = ?");
+            params.add(year);
+        }
+
+        request.append(" GROUP BY f.id ORDER BY likes_count DESC");
+
+        if (count != null) {
+            request.append(" LIMIT ?");
+            params.add(count);
+        }
+
+        return findMany(request.toString(), params.toArray());
     }
 
     @Override

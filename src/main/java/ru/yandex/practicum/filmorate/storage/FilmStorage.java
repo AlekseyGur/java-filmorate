@@ -28,7 +28,7 @@ public interface FilmStorage {
     List<FilmDto> findAll();
 
     // Получает список популярных фильмов
-    List<FilmDto> getPopularFilms(Integer count);
+    List<FilmDto> getPopularFilms(Integer count, Integer genreId, Integer year);
 
     // Поиск по фильмам (по названию)
     List<FilmDto> searchByTitle(String query);
