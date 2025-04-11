@@ -26,7 +26,9 @@ public class LikeService {
     }
 
     public void addLike(Long filmId, Long userId) {
-        likeStorage.addLike(filmId, userId);
+        if (!likeStorage.checkLikeExist(filmId, userId)) {
+            likeStorage.addLike(filmId, userId);
+        }
         feedService.add(userId, filmId, FeedEventType.LIKE, FeedOperation.ADD);
     }
 

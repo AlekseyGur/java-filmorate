@@ -10,5 +10,7 @@ public interface LikeStorage {
     // Пользователь удаляет лайк у фильма
     void removeLike(Long filmId, Long userId);
 
+    boolean checkLikeExist(Long filmId, Long userId);
+
     HashMap<Long, List<Long>> findAllByFilmIds(List<Long> filmsIds);
 }
