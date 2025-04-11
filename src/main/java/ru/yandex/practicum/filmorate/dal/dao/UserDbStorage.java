@@ -20,7 +20,7 @@ public class UserDbStorage extends BaseRepository<UserDto> implements UserStorag
     private static final String USER_GET_BY_ID = "SELECT * FROM users WHERE id = ?;";
     private static final String USER_GET_ALL = "SELECT * FROM users;";
     private static final String USER_UPDATE = "UPDATE users SET email = ?, login = ?, name = ?, birthday = ? WHERE id = ?;";
-    private static final String USER_DELETE = "DELETE FROM users WHERE id = ? LIMIT 1;";
+    private static final String USER_DELETE = "DELETE FROM users WHERE id = ?;";
     private static final String FRIEND_ADD = "INSERT INTO friends(sender_id, receiver_id) VALUES (?, ?);";
     private static final String FRIEND_DELETE = "DELETE FROM friends WHERE sender_id = ? AND receiver_id = ? LIMIT 1;";
     private static final String FRIEND_GET_ALL = "SELECT u.* FROM users u JOIN friends f ON u.id = f.receiver_id WHERE f.sender_id = ?;";

@@ -7,7 +7,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.exception.Validate;
+import ru.yandex.practicum.filmorate.model.Feed;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.FeedService;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import java.util.List;
@@ -18,6 +21,13 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
+    private final FeedService feedService;
+
+    @GetMapping("/{id}/feed")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Feed> findByUser(@PathVariable Long id) {
+        return feedService.findByUser(id);
+    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -65,5 +75,17 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public User getUser(@PathVariable Long id) {
         return userService.getUser(id);
+    }
+
+    @GetMapping("/{id}/recommendations")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Film> getRecommendations(@PathVariable Long id) {
+        return userService.getRecommendations(id);
+    }
+
+    @DeleteMapping("/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void delete(@PathVariable Long userId) {
+        userService.deleteUser(userId);
     }
 }

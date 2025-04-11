@@ -16,6 +16,8 @@ public interface FilmStorage {
     // Получает список фильмов по id
     List<FilmDto> getFilms(List<Long> filmsIds);
 
+    List<FilmDto> getRecommendedFilms(Long userId);
+
     // Обновляет информацию о фильме
     Optional<FilmDto> updateFilm(Film film);
 
@@ -26,5 +28,19 @@ public interface FilmStorage {
     List<FilmDto> findAll();
 
     // Получает список популярных фильмов
-    List<FilmDto> getPopularFilms(Integer count);
+    List<FilmDto> getPopularFilms(Integer count, Integer genreId, Integer year);
+
+    // Поиск по фильмам (по названию)
+    List<FilmDto> searchByTitle(String query);
+
+    // Поиск по фильмам (по режиссёру)
+    List<FilmDto> searchByDirector(String query);
+
+    // Поиск по фильмам (по названию и режиссёру)
+    List<FilmDto> searchByTitleOrDirector(String query);
+
+    // Получает список фильмов режиссёра с сортировкой
+    List<FilmDto> findAllByDirectorIdSort(Long directorId, String sortBy);
+
+    List<FilmDto> getCommonFilmsWithFriend(Long userId, Long friendId);
 }

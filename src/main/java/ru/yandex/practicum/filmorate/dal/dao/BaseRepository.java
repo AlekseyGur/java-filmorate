@@ -44,6 +44,10 @@ public class BaseRepository<T> {
         return jdbc.query(query, mapper, params);
     }
 
+    public List<T> findManySqlParameterSource(String query, SqlParameterSource params) {
+        return njdbc.query(query, params, mapper);
+    }
+
     public List<Long> findManyIds(String query, Object... params) {
         try {
             return jdbc.query(query, (rs, rowNum) -> rs.getLong(1), params);
