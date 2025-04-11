@@ -57,7 +57,6 @@ public class ReviewService {
     }
 
     public List<Review> getFilmReviews(Long filmId, int count) {
-        filmService.checkFilmNotNullAndIdExistOrThrowIfNot(filmId);
         return convertReviewDtoToReview(reviewStorage.getByFilmId(filmId, count));
     }
 

@@ -96,11 +96,11 @@ public class GenreDbStorage extends BaseRepository<Genre> implements GenreStorag
     }
 
     private void setFilmGenresImpl(Long filmId, List<Long> genres) {
+        deleteFilmGenreAllImpl(filmId);
+
         if (genres.isEmpty()) {
             return;
         }
-
-        deleteFilmGenreAllImpl(filmId);
 
         // Создаем список мап для каждого значения
         List<SqlParameterSource> paramsList = genres.stream()

@@ -129,7 +129,7 @@ public class FilmService {
     }
 
     private void updateFilmGenresIds(Long filmId, List<Long> genresIds) {
-        if (filmId != null && !genresIds.isEmpty()) {
+        if (filmId != null) {
             genreService.updateFilmGenres(filmId, genresIds);
         }
     }
@@ -215,7 +215,7 @@ public class FilmService {
             newFilm.setReleaseDate(filmDto.getReleaseDate());
             newFilm.setDuration(filmDto.getDuration());
 
-            newFilm.setGenres(filmsGenres.getOrDefault(id, null));
+            newFilm.setGenres(filmsGenres.getOrDefault(id, List.of()));
             newFilm.setLikes(filmsLikes.getOrDefault(id, null));
             newFilm.setDirectors(filmsDirectors.getOrDefault(id, List.of()));
             newFilm.setMpa(mpas.getOrDefault(filmDto.getMpa(), null));
