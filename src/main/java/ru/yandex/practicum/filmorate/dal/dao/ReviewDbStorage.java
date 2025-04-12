@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 public class ReviewDbStorage extends BaseRepository<ReviewDto> implements ReviewStorage {
 
     private static final String INSERT_REVIEW = "INSERT INTO reviews (film_id, user_id, content, is_positive) VALUES (?, ?, ?, ?);";
-    private static final String UPDATE_REVIEW = "UPDATE reviews SET film_id = ?, user_id = ?, content = ?, is_positive = ? WHERE id = ?;";
+    private static final String UPDATE_REVIEW = "UPDATE reviews SET content = ?, is_positive = ? WHERE id = ?;";
     private static final String DELETE_BY_ID = "DELETE FROM reviews WHERE id = ?;";
 
     private static final String BEGIN = """
@@ -42,7 +42,7 @@ public class ReviewDbStorage extends BaseRepository<ReviewDto> implements Review
                 r.user_id,
                 r.content,
                 r.is_positive
-            ORDER BY useful DESC, id DESC
+            ORDER BY useful DESC, id ASC
             LIMIT ?; """;
     private static final String FIND_BY_ID_WITH_RATING = BEGIN + " WHERE r.id = ? " + END;
     private static final String FIND_BY_FILM_ID_WITH_RATING = BEGIN + " WHERE r.film_id = ? " + END;
@@ -88,8 +88,6 @@ public class ReviewDbStorage extends BaseRepository<ReviewDto> implements Review
     @Override
     public Optional<ReviewDto> update(Review review) {
         update(UPDATE_REVIEW,
-                review.getFilmId(),
-                review.getUserId(),
                 review.getContent(),
                 review.getIsPositive(),
                 review.getReviewId());
