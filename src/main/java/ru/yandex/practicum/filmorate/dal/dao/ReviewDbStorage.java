@@ -31,7 +31,7 @@ public class ReviewDbStorage extends BaseRepository<ReviewDto> implements Review
                 r.user_id AS user_id,
                 r.content AS content,
                 r.is_positive AS is_positive,
-                2 * SUM(rl.is_useful) - COUNT(rl.*) AS useful
+                COALESCE(2 * SUM(rl.is_useful) - COUNT(rl.*), 0) AS useful
             FROM reviews AS r
             LEFT JOIN reviews_likes AS rl
             ON r.id = rl.review_id """;
