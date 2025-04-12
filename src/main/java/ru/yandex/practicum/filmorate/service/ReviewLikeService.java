@@ -35,7 +35,7 @@ public class ReviewLikeService {
         userService.checkUserNotNullAndIdExistOrThrowIfNot(userId);
         reviewLikeStorage.remove(userId, reviewId, true);
         reviewLikeStorage.add(userId, reviewId, false);
-        feedService.add(userId, reviewId, FeedEventType.LIKE, FeedOperation.ADD);
+        // feedService.add(userId, reviewId, FeedEventType.LIKE, FeedOperation.ADD);
     }
 
     public void removeLike(Long reviewId, Long userId) {
@@ -49,7 +49,7 @@ public class ReviewLikeService {
         reviewService.checkReviewNotNullAndIdExistOrThrowIfNot(reviewId);
         userService.checkUserNotNullAndIdExistOrThrowIfNot(userId);
         reviewLikeStorage.remove(userId, reviewId, false);
-        feedService.add(userId, reviewId, FeedEventType.LIKE, FeedOperation.REMOVE);
+        // feedService.add(userId, reviewId, FeedEventType.LIKE, FeedOperation.REMOVE);
     }
 
     public void checkReviewNotNullAndIdExistOrThrowIfNot(Long reviewId) {

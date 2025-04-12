@@ -39,7 +39,7 @@ public class ReviewService {
         checkReviewNotNullAndIdExistOrThrowIfNot(review.getReviewId());
         filmService.checkFilmNotNullAndIdExistOrThrowIfNot(review.getFilmId());
         userService.checkUserNotNullAndIdExistOrThrowIfNot(review.getUserId());
-        feedService.add(review.getUserId(), review.getReviewId(), FeedEventType.REVIEW, FeedOperation.UPDATE);
+        // feedService.add(review.getUserId(), review.getReviewId(), FeedEventType.REVIEW, FeedOperation.UPDATE);
         return convertReviewDtoToReview(reviewStorage.update(review).orElse(null));
     }
 
