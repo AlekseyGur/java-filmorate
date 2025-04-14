@@ -43,7 +43,6 @@ public class UserControllerTest {
     void testCreateNoNameSetLoginToName() {
         User user = new User();
         user.setLogin("login");
-        // user.setName("name");
         user.setEmail("test@test.test");
         user.setBirthday(LocalDate.parse("1995-04-21").toString());
 

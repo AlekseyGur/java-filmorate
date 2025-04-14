@@ -97,7 +97,6 @@ public class GenreDbStorage extends BaseRepository<Genre> implements GenreStorag
             return;
         }
 
-        // Создаем список мап для каждого значения
         List<SqlParameterSource> paramsList = genres.stream()
                 .map(genreId -> new MapSqlParameterSource()
                         .addValue("filmId", filmId)

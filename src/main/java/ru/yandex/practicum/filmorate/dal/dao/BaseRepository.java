@@ -58,18 +58,14 @@ public class BaseRepository<T> {
     }
 
     public boolean unsafeCheckTableContainsId(String tableName, long id) {
-        // Небезопасный метод. Только для служебного пользования
-        // Нет проверки на правильность значения tableName
         String q = "SELECT id FROM " + tableName + " WHERE id = ? LIMIT 1;";
 
         try {
             Long count = jdbc.queryForObject(q, Long.class, id);
             return count > 0;
         } catch (EmptyResultDataAccessException e) {
-            // log.debug("Запись не найдена в таблице " + tableName);
             return false;
         } catch (Exception e) {
-            // log.error("Ошибка при проверке существования записи", e);
             return false;
         }
     }
@@ -115,10 +111,8 @@ public class BaseRepository<T> {
         int countKeys = keys.size();
 
         if (countKeys > 1) {
-            // неколько значений в ключе, вернём первый
             return (Long) keys.get(0).entrySet().iterator().next().getValue();
         } else if (countKeys == 1) {
-            // один первичный ключ
             return (Long) keys.get(0).entrySet().iterator().next().getValue();
         }
         throw new InternalServerException("Не удалось сохранить данные");
