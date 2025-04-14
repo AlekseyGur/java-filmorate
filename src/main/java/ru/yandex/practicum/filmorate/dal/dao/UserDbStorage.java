@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
@@ -30,8 +30,8 @@ public class UserDbStorage extends BaseRepository<UserDto> implements UserStorag
     private static final String USERS_LIKED_FILM = " SELECT u.id FROM users u JOIN films_likes fl ON u.id = fl.user_id WHERE fl.film_id = ?;";
 
     @Autowired
-    public UserDbStorage(JdbcTemplate jdbc, UserRowMapper mapper) {
-        super(jdbc, mapper);
+    public UserDbStorage(NamedParameterJdbcTemplate njdbc, UserRowMapper mapper) {
+        super(njdbc, mapper);
     }
 
     @Override

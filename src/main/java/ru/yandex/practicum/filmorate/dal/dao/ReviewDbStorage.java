@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.dal.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -49,8 +49,8 @@ public class ReviewDbStorage extends BaseRepository<ReviewDto> implements Review
     private static final String FIND_ALL = BEGIN + " " + END;
 
     @Autowired
-    public ReviewDbStorage(JdbcTemplate jdbc, ReviewRowMapper mapper) {
-        super(jdbc, mapper);
+    public ReviewDbStorage(NamedParameterJdbcTemplate njdbc, ReviewRowMapper mapper) {
+        super(njdbc, mapper);
     }
 
     @Override

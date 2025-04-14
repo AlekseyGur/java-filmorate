@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.dal.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -20,8 +20,8 @@ public class ReviewLikeDbStorage extends BaseRepository<ReviewLikeDto> implement
     private static final String DELETE_LIKE = "DELETE FROM reviews_likes WHERE review_id = ? AND user_id = ? AND is_useful = ? LIMIT 1;";
 
     @Autowired
-    public ReviewLikeDbStorage(JdbcTemplate jdbc, ReviewLikeRowMapper mapper) {
-        super(jdbc, mapper);
+    public ReviewLikeDbStorage(NamedParameterJdbcTemplate njdbc, ReviewLikeRowMapper mapper) {
+        super(njdbc, mapper);
     }
 
     @Override

@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
@@ -28,8 +28,8 @@ public class LikeDbStorage extends BaseRepository<Like> implements LikeStorage {
     private static final String LIKE_CHECK_EXIST = "SELECT * FROM films_likes WHERE film_id = ? AND user_id = ?;";
 
     @Autowired
-    public LikeDbStorage(JdbcTemplate jdbc, LikeRowMapper mapper) {
-        super(jdbc, mapper);
+    public LikeDbStorage(NamedParameterJdbcTemplate njdbc, LikeRowMapper mapper) {
+        super(njdbc, mapper);
     }
 
     @Override

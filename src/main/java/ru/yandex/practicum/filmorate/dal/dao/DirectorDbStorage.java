@@ -7,8 +7,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
@@ -36,8 +36,8 @@ public class DirectorDbStorage extends BaseRepository<DirectorDto> implements Di
     private static final String DIRECTORS_FILM_DELETE_ALL = "DELETE FROM films_directors WHERE film_id = ?;";
 
     @Autowired
-    public DirectorDbStorage(JdbcTemplate jdbc, DirectorRowMapper mapper) {
-        super(jdbc, mapper);
+    public DirectorDbStorage(NamedParameterJdbcTemplate njdbc, DirectorRowMapper mapper) {
+        super(njdbc, mapper);
     }
 
     @Override

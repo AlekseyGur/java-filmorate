@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
@@ -34,8 +34,8 @@ public class GenreDbStorage extends BaseRepository<Genre> implements GenreStorag
     private static final String GENRE_FILM_DELETE_ALL = "DELETE FROM films_genres WHERE film_id = ?;";
 
     @Autowired
-    public GenreDbStorage(JdbcTemplate jdbc, GenreRowMapper mapper) {
-        super(jdbc, mapper);
+    public GenreDbStorage(NamedParameterJdbcTemplate njdbc, GenreRowMapper mapper) {
+        super(njdbc, mapper);
     }
 
     @Override

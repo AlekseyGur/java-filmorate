@@ -3,15 +3,13 @@ package ru.yandex.practicum.filmorate.dal.dao;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import ru.yandex.practicum.filmorate.dal.mapper.MpaRowMapper;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.storage.MpaStorage;
-
-// import ru.yandex.practicum.filmorate.storage.MpaStorage;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,8 +21,8 @@ public class MpaDbStorage extends BaseRepository<Mpa> implements MpaStorage {
     private static final String MPA_DELETE = "DELETE FROM Mpa WHERE id = ? LIMIT 1;";
 
     @Autowired
-    public MpaDbStorage(JdbcTemplate jdbc, MpaRowMapper mapper) {
-        super(jdbc, mapper);
+    public MpaDbStorage(NamedParameterJdbcTemplate njdbc, MpaRowMapper mapper) {
+        super(njdbc, mapper);
     }
 
     @Override

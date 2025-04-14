@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate.dal.dao;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
@@ -22,8 +22,8 @@ public class FeedDbStorage extends BaseRepository<FeedDto> implements FeedStorag
     private static final String GET_ALL_BY_USER = "SELECT * FROM feed WHERE user_id = ?;";
 
     @Autowired
-    public FeedDbStorage(JdbcTemplate jdbc, FeedRowMapper mapper) {
-        super(jdbc, mapper);
+    public FeedDbStorage(NamedParameterJdbcTemplate njdbc, FeedRowMapper mapper) {
+        super(njdbc, mapper);
     }
 
     @Override
