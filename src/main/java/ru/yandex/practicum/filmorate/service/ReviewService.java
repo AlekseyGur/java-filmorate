@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -9,7 +8,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.dal.dao.ToolsDb;
-import ru.yandex.practicum.filmorate.dal.dto.ReviewDto;
+import ru.yandex.practicum.filmorate.dal.mapper.ReviewMapper;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.FeedEventType;
 import ru.yandex.practicum.filmorate.model.FeedOperation;
@@ -30,7 +29,7 @@ public class ReviewService {
     public Review add(Review review) {
         filmService.checkFilmNotNullAndIdExistOrThrowIfNot(review.getFilmId());
         userService.checkUserNotNullAndIdExistOrThrowIfNot(review.getUserId());
-        Review reviewSaved = convertReviewDtoToReview(reviewStorage.add(review).orElse(null));
+        Review reviewSaved = ReviewMapper.fromDto(reviewStorage.add(review).orElse(null));
         feedService.add(review.getUserId(), reviewSaved.getReviewId(), FeedEventType.REVIEW, FeedOperation.ADD);
         return reviewSaved;
     }
@@ -39,29 +38,29 @@ public class ReviewService {
         checkReviewNotNullAndIdExistOrThrowIfNot(review.getReviewId());
         filmService.checkFilmNotNullAndIdExistOrThrowIfNot(review.getFilmId());
         userService.checkUserNotNullAndIdExistOrThrowIfNot(review.getUserId());
-        Review reviewSaved = convertReviewDtoToReview(reviewStorage.update(review).orElse(null));
+        Review reviewSaved = ReviewMapper.fromDto(reviewStorage.update(review).orElse(null));
         feedService.add(reviewSaved.getUserId(), reviewSaved.getReviewId(), FeedEventType.REVIEW, FeedOperation.UPDATE);
         return reviewSaved;
     }
 
     public void remove(Long id) {
         checkReviewNotNullAndIdExistOrThrowIfNot(id);
-        Review review = convertReviewDtoToReview(reviewStorage.get(id).orElse(null));
+        Review review = ReviewMapper.fromDto(reviewStorage.get(id).orElse(null));
         feedService.add(review.getUserId(), review.getReviewId(), FeedEventType.REVIEW, FeedOperation.REMOVE);
         reviewStorage.remove(id);
     }
 
     public Review get(Long id) {
-        Review review = convertReviewDtoToReview(reviewStorage.get(id).orElse(null));
+        Review review = ReviewMapper.fromDto(reviewStorage.get(id).orElse(null));
         checkReviewNotNullThrowIfNot(review);
         return review;
     }
 
     public List<Review> getFilmReviews(Long filmId, int count) {
         if (filmId != null) {
-            return convertReviewDtoToReview(reviewStorage.getByFilmId(filmId, count));
+            return ReviewMapper.fromDto(reviewStorage.getByFilmId(filmId, count));
         }
-        return convertReviewDtoToReview(reviewStorage.findAll(count));
+        return ReviewMapper.fromDto(reviewStorage.findAll(count));
     }
 
     public void checkReviewNotNullAndIdExistOrThrowIfNot(Long reviewId) {
@@ -74,23 +73,5 @@ public class ReviewService {
         if (review == null) {
             throw new NotFoundException("Отзыв на фильм не найден");
         }
-    }
-
-    private List<Review> convertReviewDtoToReview(List<ReviewDto> reviewsDto) {
-        return reviewsDto.stream().map(this::convertReviewDtoToReview).collect(Collectors.toList());
-    }
-
-    private Review convertReviewDtoToReview(ReviewDto reviewDto) {
-        if (reviewDto == null) {
-            return null;
-        }
-        Review review = new Review();
-        review.setReviewId(reviewDto.getId());
-        review.setFilmId(reviewDto.getFilmId());
-        review.setUserId(reviewDto.getUserId());
-        review.setIsPositive(reviewDto.getIsPositive());
-        review.setContent(reviewDto.getContent());
-        review.setUseful(reviewDto.getUseful());
-        return review;
     }
 }
