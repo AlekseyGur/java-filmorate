@@ -4,11 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.dal.dao.ToolsDb;
 import ru.yandex.practicum.filmorate.dal.dto.DirectorDto;
 import ru.yandex.practicum.filmorate.exception.ConditionsNotMetException;
@@ -16,8 +14,6 @@ import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.storage.DirectorStorage;
 
-@Slf4j
-@Component
 @Service
 @RequiredArgsConstructor
 public class DirectorService {
@@ -89,7 +85,7 @@ public class DirectorService {
             directorsIdsFiltered = directorsIds.stream().filter(x -> x != null).distinct().toList();
 
             if (!directorsIdsFiltered.isEmpty()
-                    && !toolsDb.unsafeCheckTableContainsIds("directors", directorsIdsFiltered)) {
+                    && !toolsDb.unsafeCheckTableContainsId("directors", directorsIdsFiltered)) {
                 throw new NotFoundException(
                         "В списке режиссеров найден неизвестный id режиссера: " + directorsIdsFiltered.toString());
             }

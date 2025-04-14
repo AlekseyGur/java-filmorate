@@ -10,18 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.dal.dto.DirectorDto;
 import ru.yandex.practicum.filmorate.dal.dto.PairIdsDto;
 import ru.yandex.practicum.filmorate.dal.mapper.DirectorRowMapper;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.storage.DirectorStorage;
 
-@Slf4j
-@Component
 @Repository
 public class DirectorDbStorage extends BaseRepository<DirectorDto> implements DirectorStorage {
     private static final String ADD = "INSERT INTO directors(name) VALUES (?);";

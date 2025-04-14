@@ -10,9 +10,7 @@ import ru.yandex.practicum.filmorate.dal.mapper.MpaRowMapper;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.storage.MpaStorage;
-import org.springframework.stereotype.Component;
 
-@Component
 @Repository
 public class MpaDbStorage extends BaseRepository<Mpa> implements MpaStorage {
     private static final String MPA_ADD = "INSERT INTO Mpa(name) VALUES (?);";

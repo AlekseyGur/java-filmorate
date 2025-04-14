@@ -2,11 +2,9 @@ package ru.yandex.practicum.filmorate.service;
 
 import java.util.List;
 
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.dal.dao.ToolsDb;
 import ru.yandex.practicum.filmorate.dal.mapper.ReviewMapper;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
@@ -15,8 +13,6 @@ import ru.yandex.practicum.filmorate.model.FeedOperation;
 import ru.yandex.practicum.filmorate.model.Review;
 import ru.yandex.practicum.filmorate.storage.ReviewStorage;
 
-@Slf4j
-@Component
 @Service
 @RequiredArgsConstructor
 public class ReviewService {

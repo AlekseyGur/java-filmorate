@@ -11,16 +11,11 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
-import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.dal.dto.PairIdsDto;
 import ru.yandex.practicum.filmorate.dal.mapper.GenreRowMapper;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.GenreStorage;
 
-import org.springframework.stereotype.Component;
-
-@Slf4j
-@Component
 @Repository
 public class GenreDbStorage extends BaseRepository<Genre> implements GenreStorage {
 

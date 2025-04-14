@@ -10,16 +10,11 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
-import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.dal.dto.PairIdsDto;
 import ru.yandex.practicum.filmorate.dal.mapper.LikeRowMapper;
 import ru.yandex.practicum.filmorate.model.Like;
 import ru.yandex.practicum.filmorate.storage.LikeStorage;
 
-import org.springframework.stereotype.Component;
-
-@Slf4j
-@Component
 @Repository
 public class LikeDbStorage extends BaseRepository<Like> implements LikeStorage {
     private static final String LIKE_ADD = "INSERT INTO films_likes (film_id, user_id) VALUES (?, ?);";

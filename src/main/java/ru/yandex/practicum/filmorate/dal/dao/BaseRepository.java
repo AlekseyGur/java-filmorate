@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.dal.dao;
 
-import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.dal.dto.PairIdsDto;
 import ru.yandex.practicum.filmorate.dal.mapper.PairIdsDtoRowMapper;
 import ru.yandex.practicum.filmorate.exception.InternalServerException;
@@ -21,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Slf4j
 public class BaseRepository<T> {
     private final JdbcOperations jdbc;
     private final RowMapper<T> mapper;
@@ -72,7 +70,6 @@ public class BaseRepository<T> {
             return false;
         } catch (Exception e) {
             // log.error("Ошибка при проверке существования записи", e);
-            // throw e;
             return false;
         }
     }

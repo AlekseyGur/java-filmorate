@@ -1,16 +1,12 @@
 package ru.yandex.practicum.filmorate.service;
 
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.storage.ReviewLikeStorage;
 import ru.yandex.practicum.filmorate.dal.dao.ToolsDb;
 
-@Slf4j
-@Component
 @Service
 @RequiredArgsConstructor
 public class ReviewLikeService {

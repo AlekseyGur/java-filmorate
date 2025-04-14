@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.dal.dto.ReviewDto;
 import ru.yandex.practicum.filmorate.dal.mapper.ReviewRowMapper;
 import ru.yandex.practicum.filmorate.model.Review;
@@ -13,10 +12,6 @@ import ru.yandex.practicum.filmorate.storage.ReviewStorage;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.stereotype.Component;
-
-@Slf4j
-@Component
 @Repository
 public class ReviewDbStorage extends BaseRepository<ReviewDto> implements ReviewStorage {
 

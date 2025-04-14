@@ -4,16 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.dal.dto.ReviewLikeDto;
 import ru.yandex.practicum.filmorate.dal.mapper.ReviewLikeRowMapper;
 import ru.yandex.practicum.filmorate.model.ReviewLike;
 import ru.yandex.practicum.filmorate.storage.ReviewLikeStorage;
 
-import org.springframework.stereotype.Component;
-
-@Slf4j
-@Component
 @Repository
 public class ReviewLikeDbStorage extends BaseRepository<ReviewLikeDto> implements ReviewLikeStorage {
     private static final String ADD_LIKE = "INSERT INTO reviews_likes (review_id, user_id, is_useful) VALUES (?, ?, ?);";

@@ -15,13 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import ru.yandex.practicum.filmorate.exception.Validate;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.LikeService;
+import ru.yandex.practicum.filmorate.utils.Validate;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/films")

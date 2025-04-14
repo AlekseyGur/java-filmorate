@@ -1,17 +1,20 @@
-package ru.yandex.practicum.filmorate.exception;
+package ru.yandex.practicum.filmorate.utils;
 
 import java.time.LocalDate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import jakarta.validation.Valid;
+import lombok.experimental.UtilityClass;
+import ru.yandex.practicum.filmorate.exception.ConstraintViolationException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Review;
 import ru.yandex.practicum.filmorate.model.User;
 
+@UtilityClass
 public class Validate {
-
     public static void film(@Valid Film film) {
         if (film.getName() == null || film.getName().isBlank()) {
             throw new ValidationException("Название не может быть пустым");
@@ -39,7 +42,6 @@ public class Validate {
         }
 
         if (user.getName() == null || user.getName().isBlank()) {
-            // Имя может быть пустым — в таком случае будет использован
             user.setName(user.getLogin());
         }
 

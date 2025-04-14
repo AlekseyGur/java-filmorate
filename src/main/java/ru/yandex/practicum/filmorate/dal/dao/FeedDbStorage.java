@@ -4,17 +4,13 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.dal.dto.FeedDto;
 import ru.yandex.practicum.filmorate.dal.mapper.FeedRowMapper;
 import ru.yandex.practicum.filmorate.model.Feed;
 import ru.yandex.practicum.filmorate.storage.FeedStorage;
 
-@Slf4j
-@Component
 @Repository
 public class FeedDbStorage extends BaseRepository<FeedDto> implements FeedStorage {
     private static final String ADD = "INSERT INTO feed(user_id, entity_id, event_type, operation) VALUES (?, ?, ?, ?);";

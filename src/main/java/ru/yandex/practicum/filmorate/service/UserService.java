@@ -2,11 +2,9 @@ package ru.yandex.practicum.filmorate.service;
 
 import java.util.List;
 
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.dal.dao.ToolsDb;
 import ru.yandex.practicum.filmorate.dal.mapper.UserMapper;
 import ru.yandex.practicum.filmorate.exception.ConditionsNotMetException;
@@ -17,8 +15,6 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-@Slf4j
-@Component
 @Service
 @RequiredArgsConstructor
 public class UserService {

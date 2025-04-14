@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.service;
 import java.util.HashMap;
 import java.util.List;
 
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -13,7 +12,6 @@ import ru.yandex.practicum.filmorate.model.FeedEventType;
 import ru.yandex.practicum.filmorate.model.FeedOperation;
 import ru.yandex.practicum.filmorate.storage.LikeStorage;
 
-@Component
 @Service
 @RequiredArgsConstructor
 public class LikeService {
