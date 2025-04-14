@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import ru.yandex.practicum.filmorate.model.Feed;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -57,14 +56,14 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public User addUser(@Valid @RequestBody User user) {
+    public User addUser(@RequestBody User user) {
         Validate.user(user);
         return userService.addUser(user);
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public User updateUser(@Valid @RequestBody User user) {
+    public User updateUser(@RequestBody User user) {
         Validate.user(user);
         return userService.updateUser(user);
     }

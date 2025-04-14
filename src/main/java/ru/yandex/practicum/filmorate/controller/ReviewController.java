@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import ru.yandex.practicum.filmorate.model.Review;
 import ru.yandex.practicum.filmorate.service.ReviewLikeService;
@@ -30,14 +29,14 @@ public class ReviewController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Review update(@Valid @RequestBody Review review) {
+    public Review update(@RequestBody Review review) {
         Validate.review(review);
         return reviewService.update(review);
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public Review updatePut(@Valid @RequestBody Review review) {
+    public Review updatePut(@RequestBody Review review) {
         // тесты postman требуют PUT по разным адресам
         Validate.review(review);
         return reviewService.update(review);
@@ -51,7 +50,7 @@ public class ReviewController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Review add(@Valid @RequestBody Review review) {
+    public Review add(@RequestBody Review review) {
         Validate.review(review);
         return reviewService.add(review);
     }
