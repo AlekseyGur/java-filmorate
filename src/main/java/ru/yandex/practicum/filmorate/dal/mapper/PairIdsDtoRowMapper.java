@@ -7,10 +7,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
-import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.dal.dto.PairIdsDto;
 
-@Slf4j
 @Component
 public class PairIdsDtoRowMapper implements RowMapper<PairIdsDto> {
     @SuppressWarnings("null")

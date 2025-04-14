@@ -13,12 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import ru.yandex.practicum.filmorate.exception.Validate;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.LikeService;
+import ru.yandex.practicum.filmorate.utils.Validate;
 
 @RestController
 @RequiredArgsConstructor
@@ -39,10 +38,20 @@ public class FilmController {
         likeService.removeLike(filmId, userId);
     }
 
+    @GetMapping("/search")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Film> search(@RequestParam String query, @RequestParam String by) {
+        return filmService.search(query, by);
+    }
+
     @GetMapping("/popular")
     @ResponseStatus(HttpStatus.OK)
-    public List<Film> getPopularFilms(@RequestParam(defaultValue = "10") int count) {
-        return filmService.getPopularFilms(count);
+    public List<Film> getPopularFilms(
+            @RequestParam(required = false) Integer count,
+            @RequestParam(required = false) Integer genreId,
+            @RequestParam(required = false) Integer year
+    ) {
+        return filmService.getPopularFilms(count, genreId, year);
     }
 
     @GetMapping("/{filmId}")
@@ -59,15 +68,35 @@ public class FilmController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Film create(@Valid @RequestBody Film film) {
+    public Film create(@RequestBody Film film) {
         Validate.film(film);
         return filmService.create(film);
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public Film update(@Valid @RequestBody Film film) {
+    public Film update(@RequestBody Film film) {
         Validate.film(film);
         return filmService.update(film);
     }
+
+    @GetMapping("/director/{directorId}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Film> findByDirectorSort(@PathVariable Long directorId,
+            @RequestParam(defaultValue = "year") String sortBy) {
+        return filmService.findByDirectorSort(directorId, sortBy);
+    }
+
+    @GetMapping("/common")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Film> findCommonFilmsWithFriend(@RequestParam Long userId, @RequestParam Long friendId) {
+        return filmService.getCommonFilmsWithFriend(userId, friendId);
+    }
+
+    @DeleteMapping("/{filmId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void delete(@PathVariable Long filmId) {
+        filmService.delete(filmId);
+    }
+
 }

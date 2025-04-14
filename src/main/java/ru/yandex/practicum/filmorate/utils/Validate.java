@@ -1,15 +1,20 @@
-package ru.yandex.practicum.filmorate.exception;
+package ru.yandex.practicum.filmorate.utils;
 
 import java.time.LocalDate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import jakarta.validation.Valid;
+import lombok.experimental.UtilityClass;
+import ru.yandex.practicum.filmorate.exception.ConstraintViolationException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Review;
 import ru.yandex.practicum.filmorate.model.User;
 
+@UtilityClass
 public class Validate {
-
     public static void film(@Valid Film film) {
         if (film.getName() == null || film.getName().isBlank()) {
             throw new ValidationException("Название не может быть пустым");
@@ -37,12 +42,35 @@ public class Validate {
         }
 
         if (user.getName() == null || user.getName().isBlank()) {
-            // Имя может быть пустым — в таком случае будет использован
             user.setName(user.getLogin());
         }
 
         if (user.getBirthday() != null && LocalDate.parse(user.getBirthday()).isAfter(LocalDate.now())) {
             throw new ValidationException("Дата рождения не может быть в будущем");
+        }
+    }
+
+    public static void director(@Valid Director director) {
+        if (director.getName() == null || director.getName().isBlank()) {
+            throw new ValidationException("Укажите имя режиссёра");
+        }
+    }
+
+    public static void review(@Valid Review review) {
+        if (review == null) {
+            throw new ConstraintViolationException("Укажите данные отзыва");
+        }
+        if (review.getContent() == null || review.getContent().isBlank()) {
+            throw new ConstraintViolationException("Отзыв не может быть пустым");
+        }
+        if (review.getFilmId() == null) {
+            throw new ConstraintViolationException("Укажите id фильма");
+        }
+        if (review.getUserId() == null) {
+            throw new ConstraintViolationException("Укажите id пользователя");
+        }
+        if (review.getIsPositive() == null) {
+            throw new ConstraintViolationException("Укажите оценку отзыва");
         }
     }
 

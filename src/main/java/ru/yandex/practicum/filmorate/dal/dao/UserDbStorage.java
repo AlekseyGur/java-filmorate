@@ -4,8 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import ru.yandex.practicum.filmorate.dal.dto.UserDto;
@@ -13,14 +12,13 @@ import ru.yandex.practicum.filmorate.dal.mapper.UserRowMapper;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-@Component
 @Repository
 public class UserDbStorage extends BaseRepository<UserDto> implements UserStorage {
     private static final String USER_ADD = "INSERT INTO users(email, login, name, birthday) VALUES (?, ?, ?, ?);";
     private static final String USER_GET_BY_ID = "SELECT * FROM users WHERE id = ?;";
     private static final String USER_GET_ALL = "SELECT * FROM users;";
     private static final String USER_UPDATE = "UPDATE users SET email = ?, login = ?, name = ?, birthday = ? WHERE id = ?;";
-    private static final String USER_DELETE = "DELETE FROM users WHERE id = ? LIMIT 1;";
+    private static final String USER_DELETE = "DELETE FROM users WHERE id = ?;";
     private static final String FRIEND_ADD = "INSERT INTO friends(sender_id, receiver_id) VALUES (?, ?);";
     private static final String FRIEND_DELETE = "DELETE FROM friends WHERE sender_id = ? AND receiver_id = ? LIMIT 1;";
     private static final String FRIEND_GET_ALL = "SELECT u.* FROM users u JOIN friends f ON u.id = f.receiver_id WHERE f.sender_id = ?;";
@@ -28,8 +26,8 @@ public class UserDbStorage extends BaseRepository<UserDto> implements UserStorag
     private static final String USERS_LIKED_FILM = " SELECT u.id FROM users u JOIN films_likes fl ON u.id = fl.user_id WHERE fl.film_id = ?;";
 
     @Autowired
-    public UserDbStorage(JdbcTemplate jdbc, UserRowMapper mapper) {
-        super(jdbc, mapper);
+    public UserDbStorage(NamedParameterJdbcTemplate njdbc, UserRowMapper mapper) {
+        super(njdbc, mapper);
     }
 
     @Override

@@ -6,21 +6,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
-import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.dal.dto.PairIdsDto;
 import ru.yandex.practicum.filmorate.dal.mapper.GenreRowMapper;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.GenreStorage;
 
-import org.springframework.stereotype.Component;
-
-@Slf4j
-@Component
 @Repository
 public class GenreDbStorage extends BaseRepository<Genre> implements GenreStorage {
 
@@ -34,8 +29,8 @@ public class GenreDbStorage extends BaseRepository<Genre> implements GenreStorag
     private static final String GENRE_FILM_DELETE_ALL = "DELETE FROM films_genres WHERE film_id = ?;";
 
     @Autowired
-    public GenreDbStorage(JdbcTemplate jdbc, GenreRowMapper mapper) {
-        super(jdbc, mapper);
+    public GenreDbStorage(NamedParameterJdbcTemplate njdbc, GenreRowMapper mapper) {
+        super(njdbc, mapper);
     }
 
     @Override
@@ -96,13 +91,12 @@ public class GenreDbStorage extends BaseRepository<Genre> implements GenreStorag
     }
 
     private void setFilmGenresImpl(Long filmId, List<Long> genres) {
+        deleteFilmGenreAllImpl(filmId);
+
         if (genres.isEmpty()) {
             return;
         }
 
-        deleteFilmGenreAllImpl(filmId);
-
-        // Создаем список мап для каждого значения
         List<SqlParameterSource> paramsList = genres.stream()
                 .map(genreId -> new MapSqlParameterSource()
                         .addValue("filmId", filmId)

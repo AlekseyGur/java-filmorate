@@ -7,24 +7,29 @@ import ru.yandex.practicum.filmorate.dal.dto.FilmDto;
 import ru.yandex.practicum.filmorate.model.Film;
 
 public interface FilmStorage {
-    // Добавляет новый фильм в хранилище
     Optional<FilmDto> addFilm(Film film);
 
-    // Получает фильм по его уникальному идентификатору
     Optional<FilmDto> getFilm(Long id);
 
-    // Получает список фильмов по id
     List<FilmDto> getFilms(List<Long> filmsIds);
 
-    // Обновляет информацию о фильме
+    List<FilmDto> getRecommendedFilms(Long userId);
+
     Optional<FilmDto> updateFilm(Film film);
 
-    // Удаляет фильм по его уникальному идентификатору
     void deleteFilm(Long id);
 
-    // Получает список всех фильмов
     List<FilmDto> findAll();
 
-    // Получает список популярных фильмов
-    List<FilmDto> getPopularFilms(Integer count);
+    List<FilmDto> getPopularFilms(Integer count, Integer genreId, Integer year);
+
+    List<FilmDto> searchByTitle(String query);
+
+    List<FilmDto> searchByDirector(String query);
+
+    List<FilmDto> searchByTitleOrDirector(String query);
+
+    List<FilmDto> findAllByDirectorIdSort(Long directorId, String sortBy);
+
+    List<FilmDto> getCommonFilmsWithFriend(Long userId, Long friendId);
 }

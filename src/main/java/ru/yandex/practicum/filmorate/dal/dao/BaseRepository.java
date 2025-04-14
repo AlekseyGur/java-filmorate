@@ -1,7 +1,5 @@
 package ru.yandex.practicum.filmorate.dal.dao;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.dal.dto.PairIdsDto;
 import ru.yandex.practicum.filmorate.dal.mapper.PairIdsDtoRowMapper;
 import ru.yandex.practicum.filmorate.exception.InternalServerException;
@@ -9,7 +7,7 @@ import ru.yandex.practicum.filmorate.exception.InternalServerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -22,14 +20,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Slf4j
-@RequiredArgsConstructor
 public class BaseRepository<T> {
-    private final JdbcTemplate jdbc;
+    private final JdbcOperations jdbc;
     private final RowMapper<T> mapper;
+    private final NamedParameterJdbcTemplate njdbc;
 
     @Autowired
-    private NamedParameterJdbcTemplate njdbc;
+    public BaseRepository(NamedParameterJdbcTemplate njdbc, RowMapper<T> mapper) {
+        this.njdbc = njdbc;
+        this.mapper = mapper;
+        jdbc = njdbc.getJdbcOperations();
+    }
 
     protected Optional<T> findOne(String query, Object... params) {
         try {
@@ -41,7 +42,11 @@ public class BaseRepository<T> {
     }
 
     public List<T> findMany(String query, Object... params) {
-        return jdbc.query(query, mapper, params);
+        return njdbc.getJdbcOperations().query(query, mapper, params);
+    }
+
+    public List<T> findManySqlParameterSource(String query, SqlParameterSource params) {
+        return njdbc.query(query, params, mapper);
     }
 
     public List<Long> findManyIds(String query, Object... params) {
@@ -53,19 +58,14 @@ public class BaseRepository<T> {
     }
 
     public boolean unsafeCheckTableContainsId(String tableName, long id) {
-        // Небезопасный метод. Только для служебного пользования
-        // Нет проверки на правильность значения tableName
         String q = "SELECT id FROM " + tableName + " WHERE id = ? LIMIT 1;";
 
         try {
             Long count = jdbc.queryForObject(q, Long.class, id);
             return count > 0;
         } catch (EmptyResultDataAccessException e) {
-            // log.debug("Запись не найдена в таблице " + tableName);
             return false;
         } catch (Exception e) {
-            // log.error("Ошибка при проверке существования записи", e);
-            // throw e;
             return false;
         }
     }
@@ -83,8 +83,6 @@ public class BaseRepository<T> {
         final RowMapper<PairIdsDto> pairMapper = new PairIdsDtoRowMapper();
         try {
             return njdbc.query(query, params, pairMapper);
-            // return jdbc.query(query, pairMapper, params);
-            // return jdbc.query(query, new PairDtoRowMapper(), params);
         } catch (DataAccessException e) {
             throw new RuntimeException("Ошибка при получении IdToId: " + e.getMessage(), e);
         }
@@ -113,10 +111,8 @@ public class BaseRepository<T> {
         int countKeys = keys.size();
 
         if (countKeys > 1) {
-            // неколько значений в ключе, вернём первый
             return (Long) keys.get(0).entrySet().iterator().next().getValue();
         } else if (countKeys == 1) {
-            // один первичный ключ
             return (Long) keys.get(0).entrySet().iterator().next().getValue();
         }
         throw new InternalServerException("Не удалось сохранить данные");
